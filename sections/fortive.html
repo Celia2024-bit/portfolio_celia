@@ -1,0 +1,166 @@
+<div class="section-label">Experience · 2024 – Present</div>
+<h2>Fortive</h2>
+<div class="exp-role">Senior Software Developer · Glasgow, UK · C++</div>
+
+<div class="story">
+
+  <!-- Project 1 -->
+  <div class="project-heading">Project 1 · IEC 61850 Real-Time System Transformation</div>
+
+  <p>This started with what looked like a small bug. Working on core algorithms for an IEC 61850 real-time system on Windows, I noticed the system was creating a new set of threads every 20ms cycle — but they were never being destroyed. Happy path tests were too short to catch it. But I knew: <strong>this thing runs 24/7 in a substation. It's only a matter of time before it crashes.</strong></p>
+
+  <p>So I dug deeper. Even if I fixed the cleanup issue, was the design actually safe? I did the math:</p>
+  <p>  We had 48 channels running at 50Hz   </p>
+
+  <div class="formula-block">
+    <div class="formula-row">
+      <span class="formula-label">Cycle time</span>
+      <span class="formula-expr">1000ms ÷ 50Hz = <span class="metric">20ms</span> per cycle</span>
+    </div>
+    <div class="formula-row">
+      <span class="formula-label">Threads per cycle</span>
+      <span class="formula-expr">48 (FFT) + 48÷3 (circuit analysis) = <span class="metric">64 threads</span></span>
+    </div>
+    <div class="formula-row formula-result">
+      <span class="formula-label">Threads per second</span>
+      <span class="formula-expr">(1000 ÷ 20) × 64 = <span class="metric">3,200 threads/sec</span> created and destroyed</span>
+    </div>
+  </div>
+
+  <p>On Windows, context switching overhead alone would eat all the CPU before any real work started. <strong>I proved mathematically that the 20ms requirement was not achievable with this architecture.</strong></p>
+
+  <p>So I ran a direct benchmark to make the case for Linux. Under <span class="metric">1,600 tasks/sec</span> — simulating 61850 real-time load — Linux finished in <span class="metric">1.1s</span> while Windows took <span class="metric">2.0s</span>. A 75% gap. That data gave us the evidence we needed to migrate.</p>
+
+  <div class="highlight-box">
+    Benchmark: <span class="metric">1,600 tasks/s</span> — Linux <span class="metric">1.1s</span> vs Windows <span class="metric">2.0s</span> — a 75% gap. This data drove the platform migration proposal.
+  </div>
+  <div class="arch-label" style="margin-top:1.5rem;">Benchmark Results — Linux vs Windows</div>
+  <table class="bench-table">
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Linux (Docker)</th>
+        <th>Windows (Host)</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Avg. Injection Time / sec</td>
+        <td class="good">~1,140 ms</td>
+        <td class="bad">~2,005 ms</td>
+        <td>Windows lag: 75%</td>
+      </tr>
+      <tr>
+        <td>Worst-case Jitter</td>
+        <td class="good">1,167 ms</td>
+        <td class="bad">2,461 ms</td>
+        <td>Critical Timing Failure</td>
+      </tr>
+      <tr>
+        <td>Total Time (8,000 tasks)</td>
+        <td class="good">7,754 ms</td>
+        <td class="bad">12,083 ms</td>
+        <td>Linux 1.5× more efficient</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="bench-logs">
+    <div class="bench-log-col">
+      <div class="arch-label">Linux — Raw Output</div>
+      <pre class="log-block">$ ./benchmark_linux
+Target Load: 1600 calls/sec | 16 calls every 10ms burst
+Second 1: 1167 ms
+Second 2: 1162 ms
+Second 3: 1147 ms
+Second 4: 1113 ms
+Second 5: 1128 ms
+Expected:  8000 tasks
+Processed: 8000 tasks
+Total:     7754 ms</pre>
+    </div>
+    <div class="bench-log-col">
+      <div class="arch-label">Windows — Raw Output</div>
+      <pre class="log-block warn">$ ./benchmark.exe
+Target Load: 1600 calls/sec | 16 calls every 10ms burst
+Second 1: 1977 ms
+Second 2: 1754 ms
+Second 3: 2461 ms  ← worst jitter
+Second 4: 2183 ms
+Second 5: 1651 ms
+Expected:  8000 tasks
+Processed: 8000 tasks
+Total:     12083 ms</pre>
+    </div>
+  </div>
+
+  <details class="code-details">
+    <summary>View benchmark source — <code>thread_comparison.cpp</code></summary>
+    <pre class="code-block">// 61850 Stress Test: kernel scheduling precision under high-frequency sub-cycle intervals
+const int intervals_per_sec = 100; // every 10ms
+const int calls_per_interval = 16; // 16 AddData calls per burst = 1,600/sec
+
+for (int i = 0; i &lt; intervals_per_sec; ++i) {
+    for (int j = 0; j &lt; calls_per_interval; ++j) {
+        notifier.AddData(s * 1000 + i);
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+}
+
+// Each callback simulates real protection algorithm overhead
+auto callback = [&](const int& data) {
+    volatile double d = 0;
+    for(int i = 0; i &lt; 300; ++i) d += i * 0.1;
+    processed_count.fetch_add(1, std::memory_order_relaxed);
+};</pre>
+  </details>
+
+  <p>I proposed a full transformation: a <strong>thread pool</strong> to eliminate lifecycle overhead, <strong>Control/Data Plane separation</strong> and a <strong>zero-copy Event Bus</strong> to break circular dependencies, and a Linux-native stack with AF_PACKET, BPF filters, and epoll for Layer 2 data access without WinPcap overhead.</p>
+
+<div class="arch-diagram">
+  <div class="arch-label">System Architecture — IEC 61850 &nbsp;·&nbsp; <em style="color:var(--text-muted);font-style:normal;">click to enlarge</em></div>
+  <img src="images/iec61850-architecture.png" alt="IEC 61850 System Architecture" />
+</div>
+ <p>I also built a <strong>performance monitor integrated into CI/CD</strong> — tracking CPU, threads, and handles with trend detection. We used it to automatically block merges on performance regression. Regressions caught in hours, not months.</p>
+
+  <div class="arch-compare">
+    <div class="arch-compare-item">
+      <div class="arch-label">❌ Regression Gate — FAIL</div>
+      <img src="images/Performance_regress_failed.png" alt="CI/CD Regression FAIL" />
+    </div>
+    <div class="arch-compare-item">
+      <div class="arch-label">✅ Regression Gate — PASS</div>
+      <img src="images/Performance_regress_pass.png" alt="CI/CD Regression PASS" />
+    </div>
+  </div>
+  
+  <!-- Project 2 -->
+  <div class="project-heading">Project 2 · Linux Migration · CentOS 8 → Ubuntu</div>
+
+  <p>When CentOS 8 hit end-of-life, most teams treat it as a pure sysadmin task — swap the OS, test, done. I saw something different: <strong>an opportunity to fix a design that had been quietly accumulating debt for years.</strong></p>
+
+  <p>The legacy stack was three layers deep — Windows services inside Wine, inside Docker, on CentOS. Every layer added overhead, added complexity, and added failure points. It was the kind of setup that works until it doesn't — and when it breaks, nobody knows where to look.</p>
+  <p>I removed Docker entirely. I stabilised Wine natively on Ubuntu — manually mapping all required Windows DLL dependencies and winetricks from scratch. Then I replaced Docker's process management with <strong>Supervisord</strong>, keeping the 24/7 self-healing behaviour but with direct kernel access and a much smaller resource footprint.</p>
+  <div class="highlight-box">
+    <strong>Before:</strong> Windows Service → Wine → Docker → CentOS 8 &nbsp;(3 layers)<br/>
+    <strong>After:</strong> Windows Service → Wine → Ubuntu &nbsp;(2 layers)<br/>
+    Removed Docker entirely — fewer layers, fewer failure points, easier to debug under pressure.
+  </div>
+
+  <div class="arch-compare">
+    <div class="arch-compare-item">
+      <div class="arch-label">Before · Legacy CentOS Architecture</div>
+      <img src="images/legacy-centos-architecture.png" alt="Legacy CentOS Architecture" />
+    </div>
+    <div class="arch-compare-item">
+      <div class="arch-label">After · Optimised Ubuntu Architecture</div>
+      <img src="images/optimized-ubuntu-architecture.png" alt="Optimised Ubuntu Architecture" />
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    3 layers → 2 layers. Fewer layers means fewer things that can go wrong. <em>Simple is reliable.</em>
+  </div>
+
+</div>

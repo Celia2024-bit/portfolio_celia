@@ -1,0 +1,100 @@
+<div class="section-label">Contact</div>
+<h2>Get in touch</h2>
+<p style="color:var(--text-dim);margin-bottom:2.5rem;font-size:0.97rem;max-width:480px;line-height:1.8;">
+  Open to new opportunities in high-performance systems, low-latency C++, and real-time infrastructure.
+  Feel free to reach out via any of the channels below.
+</p>
+
+<div class="contact-grid">
+  <a href="mailto:qiang.qiaoyan@gmail.com" class="contact-card">
+    <div class="contact-icon">✉</div>
+    <div class="contact-info">
+      <div class="contact-label">Email</div>
+      <div class="contact-value">qiang.qiaoyan@gmail.com</div>
+    </div>
+    <div class="contact-arrow">→</div>
+  </a>
+
+  <a href="https://www.linkedin.com/in/celia-qiang" target="_blank" class="contact-card">
+    <div class="contact-icon">in</div>
+    <div class="contact-info">
+      <div class="contact-label">LinkedIn</div>
+      <div class="contact-value">linkedin.com/in/celia-qiang</div>
+    </div>
+    <div class="contact-arrow">→</div>
+  </a>
+
+  <a href="https://github.com/Celia2024-bit" target="_blank" class="contact-card">
+    <div class="contact-icon">⌥</div>
+    <div class="contact-info">
+      <div class="contact-label">GitHub</div>
+      <div class="contact-value">github.com/Celia2024-bit</div>
+    </div>
+    <div class="contact-arrow">→</div>
+  </a>
+</div>
+
+<style>
+.contact-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 520px;
+}
+
+.contact-card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.contact-card:hover {
+  border-color: rgba(79,156,249,0.4);
+  background: var(--bg3);
+  transform: translateX(4px);
+}
+
+.contact-icon {
+  font-family: 'DM Mono', monospace;
+  font-size: 1rem;
+  color: var(--accent);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-dim);
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.contact-info { flex: 1; }
+
+.contact-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.2rem;
+}
+
+.contact-value {
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+.contact-arrow {
+  color: var(--text-muted);
+  font-size: 1rem;
+  transition: color 0.2s;
+}
+
+.contact-card:hover .contact-arrow { color: var(--accent); }
+</style>

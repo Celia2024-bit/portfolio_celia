@@ -1,0 +1,300 @@
+[WARNING] PlatformUtils::deleteFile: File not found - ./stop
+2026-03-05 11:00:27 :: Main :: SystemManager: StartUp complete.
+2026-03-05 11:00:27 :: Main :: Threads started. Entering monitoring loop...
+2026-03-05 11:00:27 :: Trade Executor ::  RunTradeExecutionLoop started.
+2026-03-05 11:00:29 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+2026-03-05 11:00:30 :: Strategy :: Client connected successfully.
+[RECV] "BTC" $73419.68 @ 1772708430.786156
+2026-03-05 11:00:30 :: Strategy ::  Received price: $73419.68
+
+2026-03-05 11:00:30 :: Strategy :: No signal (HOLD).
+2026-03-05 11:00:31 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73420.31 @ 1772708432.418613
+2026-03-05 11:00:32 :: Strategy ::  Received price: $73420.31
+
+2026-03-05 11:00:32 :: Strategy :: No signal (HOLD).
+2026-03-05 11:00:33 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73420.31 @ 1772708434.0454366
+2026-03-05 11:00:34 :: Strategy ::  Received price: $73420.31
+
+2026-03-05 11:00:34 :: Strategy :: No signal (HOLD).
+[RECV] "BTC" $73420.31 @ 1772708435.6840587
+2026-03-05 11:00:35 :: Strategy ::  Received price: $73420.31
+
+2026-03-05 11:00:35 :: Strategy :: No signal (HOLD).
+2026-03-05 11:00:35 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73420.31 @ 1772708437.3837855
+2026-03-05 11:00:37 :: Strategy ::  Received price: $73420.31
+
+2026-03-05 11:00:37 :: Strategy :: No signal (HOLD).
+2026-03-05 11:00:37 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73421.98 @ 1772708439.091115
+2026-03-05 11:00:39 :: Strategy ::  Received price: $73421.98
+
+2026-03-05 11:00:39 :: Strategy :: No signal (HOLD).
+2026-03-05 11:00:40 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73421.64 @ 1772708440.7209833
+2026-03-05 11:00:40 :: Strategy ::  Received price: $73421.64
+
+2026-03-05 11:00:40 :: Strategy :: No signal (HOLD).
+2026-03-05 11:00:42 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73393.0 @ 1772708442.3492408
+2026-03-05 11:00:42 :: Strategy ::  Received price: $73393.00
+
+2026-03-05 11:00:42 :: Strategy :: No signal (HOLD).
+[RECV] "BTC" $73393.0 @ 1772708443.955959
+2026-03-05 11:00:43 :: Strategy ::  Received price: $73393.00
+
+2026-03-05 11:00:43 :: Strategy :: No signal (HOLD).
+2026-03-05 11:00:44 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73407.92 @ 1772708445.5518901
+2026-03-05 11:00:45 :: Strategy ::  Received price: $73407.92
+
+HOLD
+2026-03-05 11:00:45 :: Strategy :: No signal (HOLD).
+2026-03-05 11:00:46 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73410.47 @ 1772708447.1902354
+2026-03-05 11:00:47 :: Strategy ::  Received price: $73410.47
+
+HOLD
+2026-03-05 11:00:47 :: Strategy :: No signal (HOLD).
+2026-03-05 11:00:48 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73407.37 @ 1772708449.0695238
+2026-03-05 11:00:49 :: Strategy ::  Received price: $73407.37
+
+BUY
+2026-03-05 11:00:49 :: Strategy ::  Generated signal: BUY at price $73407.37
+
+2026-03-05 11:00:49 :: Trade Executor :: Received action signal: Type=BUY, Price=$73407.37, Amount=0.01
+2026-03-05 11:00:49 :: Trade Executor ::  Processing action signal...
+2026-03-05 11:00:49 :: Trade Executor :: BUY order executed: 0.01 BTC at $73407.4. Current Cash: $9265.93, BTC: 0.01
+2026-03-05 11:00:49 :: Trade Executor ::  Action signal processed.
+2026-03-05 11:00:49 :: Trade Executor :: Loop iteration complete, sleeping briefly.
+[RECV] "BTC" $73410.69 @ 1772708450.7780213
+2026-03-05 11:00:50 :: Strategy ::  Received price: $73410.69
+
+HOLD
+2026-03-05 11:00:50 :: Strategy :: No signal (HOLD).
+2026-03-05 11:00:51 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73412.49 @ 1772708452.5176742
+2026-03-05 11:00:52 :: Strategy ::  Received price: $73412.49
+
+HOLD
+2026-03-05 11:00:52 :: Strategy :: No signal (HOLD).
+2026-03-05 11:00:53 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73362.08 @ 1772708454.229076
+2026-03-05 11:00:54 :: Strategy ::  Received price: $73362.08
+
+SELL
+2026-03-05 11:00:54 :: Strategy ::  Generated signal: SELL at price $73362.08
+
+2026-03-05 11:00:54 :: Trade Executor :: Received action signal: Type=SELL, Price=$73362.08, Amount=0.01
+2026-03-05 11:00:54 :: Trade Executor ::  Processing action signal...
+2026-03-05 11:00:54 :: Trade Executor :: SELL order executed: 0.01 BTC at $73362.1. Current Cash: $9999.55, BTC: 0.00
+2026-03-05 11:00:54 :: Trade Executor ::  Action signal processed.
+2026-03-05 11:00:54 :: Trade Executor :: Loop iteration complete, sleeping briefly.
+[RECV] "BTC" $73388.92 @ 1772708455.8637323
+2026-03-05 11:00:55 :: Strategy ::  Received price: $73388.92
+
+HOLD
+2026-03-05 11:00:55 :: Strategy :: No signal (HOLD).
+2026-03-05 11:00:56 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73384.72 @ 1772708457.5024514
+2026-03-05 11:00:57 :: Strategy ::  Received price: $73384.72
+
+HOLD
+2026-03-05 11:00:57 :: Strategy :: No signal (HOLD).
+2026-03-05 11:00:58 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73377.24 @ 1772708459.126702
+2026-03-05 11:00:59 :: Strategy ::  Received price: $73377.24
+
+HOLD
+2026-03-05 11:00:59 :: Strategy :: No signal (HOLD).
+2026-03-05 11:01:00 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73365.81 @ 1772708460.747076
+2026-03-05 11:01:00 :: Strategy ::  Received price: $73365.81
+
+BUY
+2026-03-05 11:01:00 :: Strategy ::  Generated signal: BUY at price $73365.81
+
+2026-03-05 11:01:00 :: Trade Executor :: Received action signal: Type=BUY, Price=$73365.81, Amount=0.01
+2026-03-05 11:01:00 :: Trade Executor ::  Processing action signal...
+2026-03-05 11:01:00 :: Trade Executor :: BUY order executed: 0.01 BTC at $73365.8. Current Cash: $9265.89, BTC: 0.01
+2026-03-05 11:01:00 :: Trade Executor ::  Action signal processed.
+2026-03-05 11:01:00 :: Trade Executor :: Loop iteration complete, sleeping briefly.
+[RECV] "BTC" $73368.62 @ 1772708462.3705857
+2026-03-05 11:01:02 :: Strategy ::  Received price: $73368.62
+
+SELL
+2026-03-05 11:01:02 :: Strategy ::  Generated signal: SELL at price $73368.62
+
+2026-03-05 11:01:02 :: Trade Executor :: Received action signal: Type=SELL, Price=$73368.62, Amount=0.01
+2026-03-05 11:01:02 :: Trade Executor ::  Processing action signal...
+2026-03-05 11:01:02 :: Trade Executor :: SELL order executed: 0.01 BTC at $73368.6. Current Cash: $9999.58, BTC: 0.00
+2026-03-05 11:01:02 :: Trade Executor ::  Action signal processed.
+2026-03-05 11:01:02 :: Trade Executor :: Loop iteration complete, sleeping briefly.
+[RECV] "BTC" $73376.78 @ 1772708464.0170631
+2026-03-05 11:01:04 :: Strategy ::  Received price: $73376.78
+
+HOLD
+2026-03-05 11:01:04 :: Strategy :: No signal (HOLD).
+2026-03-05 11:01:04 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73376.78 @ 1772708465.6351209
+2026-03-05 11:01:05 :: Strategy ::  Received price: $73376.78
+
+BUY
+2026-03-05 11:01:05 :: Strategy ::  Generated signal: BUY at price $73376.78
+
+2026-03-05 11:01:05 :: Trade Executor :: Received action signal: Type=BUY, Price=$73376.78, Amount=0.01
+2026-03-05 11:01:05 :: Trade Executor ::  Processing action signal...
+2026-03-05 11:01:05 :: Trade Executor :: BUY order executed: 0.01 BTC at $73376.8. Current Cash: $9265.81, BTC: 0.01
+2026-03-05 11:01:05 :: Trade Executor ::  Action signal processed.
+2026-03-05 11:01:05 :: Trade Executor :: Loop iteration complete, sleeping briefly.
+[RECV] "BTC" $73376.79 @ 1772708467.2498307
+2026-03-05 11:01:07 :: Strategy ::  Received price: $73376.79
+
+HOLD
+2026-03-05 11:01:07 :: Strategy :: No signal (HOLD).
+2026-03-05 11:01:07 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73420.54 @ 1772708468.8882647
+2026-03-05 11:01:08 :: Strategy ::  Received price: $73420.54
+
+HOLD
+2026-03-05 11:01:08 :: Strategy :: No signal (HOLD).
+2026-03-05 11:01:09 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73403.84 @ 1772708470.5082555
+2026-03-05 11:01:10 :: Strategy ::  Received price: $73403.84
+
+HOLD
+2026-03-05 11:01:10 :: Strategy :: No signal (HOLD).
+2026-03-05 11:01:11 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73393.3 @ 1772708472.193207
+2026-03-05 11:01:12 :: Strategy ::  Received price: $73393.30
+
+HOLD
+2026-03-05 11:01:12 :: Strategy :: No signal (HOLD).
+[RECV] "BTC" $73413.42 @ 1772708473.8311014
+2026-03-05 11:01:13 :: Strategy ::  Received price: $73413.42
+
+HOLD
+2026-03-05 11:01:13 :: Strategy :: No signal (HOLD).
+2026-03-05 11:01:14 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73411.02 @ 1772708475.425682
+2026-03-05 11:01:15 :: Strategy ::  Received price: $73411.02
+
+SELL
+2026-03-05 11:01:15 :: Strategy ::  Generated signal: SELL at price $73411.02
+
+2026-03-05 11:01:15 :: Trade Executor :: Received action signal: Type=SELL, Price=$73411.02, Amount=0.01
+2026-03-05 11:01:15 :: Trade Executor ::  Processing action signal...
+2026-03-05 11:01:15 :: Trade Executor :: SELL order executed: 0.01 BTC at $73411. Current Cash: $9999.92, BTC: 0.00
+2026-03-05 11:01:15 :: Trade Executor ::  Action signal processed.
+2026-03-05 11:01:15 :: Trade Executor :: Loop iteration complete, sleeping briefly.
+[RECV] "BTC" $73395.6 @ 1772708477.0344489
+2026-03-05 11:01:17 :: Strategy ::  Received price: $73395.60
+
+BUY
+2026-03-05 11:01:17 :: Strategy ::  Generated signal: BUY at price $73395.60
+
+2026-03-05 11:01:17 :: Trade Executor :: Received action signal: Type=BUY, Price=$73395.60, Amount=0.01
+2026-03-05 11:01:17 :: Trade Executor ::  Processing action signal...
+2026-03-05 11:01:17 :: Trade Executor :: BUY order executed: 0.01 BTC at $73395.6. Current Cash: $9265.96, BTC: 0.01
+2026-03-05 11:01:17 :: Trade Executor ::  Action signal processed.
+2026-03-05 11:01:17 :: Trade Executor :: Loop iteration complete, sleeping briefly.
+[RECV] "BTC" $73420.6 @ 1772708478.6255922
+2026-03-05 11:01:18 :: Strategy ::  Received price: $73420.60
+
+HOLD
+2026-03-05 11:01:18 :: Strategy :: No signal (HOLD).
+2026-03-05 11:01:19 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73433.95 @ 1772708480.2861679
+2026-03-05 11:01:20 :: Strategy ::  Received price: $73433.95
+
+HOLD
+2026-03-05 11:01:20 :: Strategy :: No signal (HOLD).
+2026-03-05 11:01:21 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73424.14 @ 1772708481.9160228
+2026-03-05 11:01:21 :: Strategy ::  Received price: $73424.14
+
+HOLD
+2026-03-05 11:01:21 :: Strategy :: No signal (HOLD).
+2026-03-05 11:01:23 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73403.61 @ 1772708483.5399363
+2026-03-05 11:01:23 :: Strategy ::  Received price: $73403.61
+
+HOLD
+2026-03-05 11:01:23 :: Strategy :: No signal (HOLD).
+[RECV] "BTC" $73449.95 @ 1772708485.1519406
+2026-03-05 11:01:25 :: Strategy ::  Received price: $73449.95
+
+SELL
+2026-03-05 11:01:25 :: Strategy ::  Generated signal: SELL at price $73449.95
+
+2026-03-05 11:01:25 :: Trade Executor :: Received action signal: Type=SELL, Price=$73449.95, Amount=0.01
+2026-03-05 11:01:25 :: Trade Executor ::  Processing action signal...
+2026-03-05 11:01:25 :: Trade Executor :: SELL order executed: 0.01 BTC at $73449.9. Current Cash: $10000.46, BTC: 0.00
+2026-03-05 11:01:25 :: Trade Executor ::  Action signal processed.
+2026-03-05 11:01:25 :: Trade Executor :: Loop iteration complete, sleeping briefly.
+[RECV] "BTC" $73449.95 @ 1772708486.7692308
+2026-03-05 11:01:26 :: Strategy ::  Received price: $73449.95
+
+BUY
+2026-03-05 11:01:26 :: Strategy ::  Generated signal: BUY at price $73449.95
+
+2026-03-05 11:01:26 :: Trade Executor :: Received action signal: Type=BUY, Price=$73449.95, Amount=0.01
+2026-03-05 11:01:26 :: Trade Executor ::  Processing action signal...
+2026-03-05 11:01:26 :: Trade Executor :: BUY order executed: 0.01 BTC at $73449.9. Current Cash: $9265.96, BTC: 0.01
+2026-03-05 11:01:26 :: Trade Executor ::  Action signal processed.
+2026-03-05 11:01:26 :: Trade Executor :: Loop iteration complete, sleeping briefly.
+[RECV] "BTC" $73445.48 @ 1772708488.4008389
+2026-03-05 11:01:28 :: Strategy ::  Received price: $73445.48
+
+HOLD
+2026-03-05 11:01:28 :: Strategy :: No signal (HOLD).
+2026-03-05 11:01:28 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73436.47 @ 1772708490.0323925
+2026-03-05 11:01:30 :: Strategy ::  Received price: $73436.47
+
+HOLD
+2026-03-05 11:01:30 :: Strategy :: No signal (HOLD).
+2026-03-05 11:01:30 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+[RECV] "BTC" $73424.94 @ 1772708491.6755333
+2026-03-05 11:01:31 :: Strategy ::  Received price: $73424.94
+
+SELL
+2026-03-05 11:01:31 :: Strategy ::  Generated signal: SELL at price $73424.94
+
+2026-03-05 11:01:31 :: Trade Executor :: Received action signal: Type=SELL, Price=$73424.94, Amount=0.01
+2026-03-05 11:01:31 :: Trade Executor ::  Processing action signal...
+2026-03-05 11:01:31 :: Trade Executor :: SELL order executed: 0.01 BTC at $73424.9. Current Cash: $10000.21, BTC: 0.00
+2026-03-05 11:01:31 :: Trade Executor ::  Action signal processed.
+2026-03-05 11:01:31 :: Trade Executor :: Loop iteration complete, sleeping briefly.
+[RECV] "BTC" $73418.19 @ 1772708493.3910537
+2026-03-05 11:01:33 :: Strategy ::  Received price: $73418.19
+
+HOLD
+2026-03-05 11:01:33 :: Strategy :: No signal (HOLD).
+2026-03-05 11:01:33 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+2026-03-05 11:01:34 :: Main :: Stop file detected: ./stop
+[DEBUG] run: Stop file detected!
+2026-03-05 11:01:34 :: Main :: SystemManager: Initiating ShutDown...
+2026-03-05 11:01:34 :: Strategy :: StrategyEngine thread finished.
+2026-03-05 11:01:35 :: Trade Executor :: Timeout waiting for action signal, checking flags and continuing...
+2026-03-05 11:01:35 :: Trade Executor :: RunTradeExecutionLoop finished.
+2026-03-05 11:01:35 :: Main :: TradeExecutor thread joined.
+2026-03-05 11:01:35 :: Main :: StrategyEngine thread joined.
+2026-03-05 11:01:35 :: Trade Executor :: 
+--- Portfolio Status ---
+2026-03-05 11:01:35 :: Trade Executor :: Current Cash: $10000.21
+2026-03-05 11:01:35 :: Trade Executor :: BTC Amount: 0.00000
+2026-03-05 11:01:35 :: Trade Executor :: Current BTC Price: $73424.94
+2026-03-05 11:01:35 :: Trade Executor :: Total Value: $10000.21
+2026-03-05 11:01:35 :: Trade Executor :: Initial Capital: $10000.00
+2026-03-05 11:01:35 :: Trade Executor :: Profit/Loss: $0.21
+2026-03-05 11:01:35 :: Trade Executor :: Total Trades: 10
+2026-03-05 11:01:35 :: Trade Executor :: Total Buy Actions: 5
+2026-03-05 11:01:35 :: Trade Executor :: Total Sell Actions: 5
+2026-03-05 11:01:35 :: Trade Executor :: ------------------------
+
+[INFO] PlatformUtils::deleteFile: File deleted successfully - ./stop
+2026-03-05 11:01:35 :: Main :: SystemManager: ShutDown complete.

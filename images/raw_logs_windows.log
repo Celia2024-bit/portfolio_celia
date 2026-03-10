@@ -1,0 +1,16 @@
+ ./benchmark.exe
+--- 61850 High-Frequency Pulse Simulation ---
+Target Load: 1600 calls/sec | 16 calls every 10ms burst
+Second 1 injection cycle completed in: 1977 ms
+Second 2 injection cycle completed in: 1754 ms
+Second 3 injection cycle completed in: 2461 ms
+Second 4 injection cycle completed in: 2183 ms
+Second 5 injection cycle completed in: 1651 ms
+
+[Status] Load injection completed. Synchronizing worker threads...
+---------------------------------------------------------
+FINAL MISSION REPORT:
+Expected Tasks:  8000
+Processed Tasks: 8000
+Total Execution Time: 12083 ms
+---------------------------------------------------------

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Celia Qiang — Staff-level Systems Engineer</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <ul class="topnav-links" style="font-size:1.05rem; font-weight:700;">
+      <li><a href="#" data-section="hero" class="active">Home</a></li>
+      <li><a href="#" data-section="about">About</a></li>
+      <li><a href="#" data-group="experience" data-section="fortive">Experience</a></li>
+      <li><a href="#" data-group="projects" data-section="trading">Personal Projects</a></li>
+      <li><a href="#" data-section="skills">Expertise</a></li>
+      <li><a href="#" data-section="contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<nav class="subnav" id="subnav" style="display:none;">
+  <div class="subnav-inner">
+    <ul class="subnav-links" id="subnav-links"></ul>
+  </div>
+</nav>
+
+<main class="main" id="main">
+  <div id="content"></div>
+  <footer class="footer">
+    <div>© 2026 Celia Qiang</div>
+  </footer>
+</main>
+
+<!-- Lightbox -->
+<div id="lightbox" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.92);">
+  <span id="lb-close" style="position:fixed; top:1rem; right:1.5rem; font-size:2.5rem; color:#fff; cursor:pointer; z-index:1001; line-height:1; user-select:none;">✕</span>
+  <div id="lb-wrap" style="width:100%; height:100%; overflow:auto; display:flex; align-items:flex-start; justify-content:flex-start; padding:3rem 2rem;">
+    <img id="lb-img" style="max-width:none; display:block; border-radius:6px; cursor:grab;" />
+  </div>
+</div>
+
+<script>
+  const content  = document.getElementById('content');
+  const subnav   = document.getElementById('subnav');
+  const subLinks = document.getElementById('subnav-links');
+  const mainEl   = document.getElementById('main');
+  const topLinks = document.querySelectorAll('.topnav-links a');
+
+  // ── Lightbox ──
+  const lb      = document.getElementById('lightbox');
+  const lbImg   = document.getElementById('lb-img');
+  const lbWrap  = document.getElementById('lb-wrap');
+  const lbClose = document.getElementById('lb-close');
+
+  function openLightbox(src) {
+    lbImg.src = src;
+    lb.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lb.style.display = 'none';
+    lbImg.src = '';
+    document.body.style.overflow = '';
+  }
+
+  lbClose.addEventListener('click', closeLightbox);
+  lb.addEventListener('click', e => { if (e.target === lb || e.target === lbWrap) closeLightbox(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+  // drag to pan
+  let dragging = false, dragStartX, dragStartY;
+  lbImg.addEventListener('mousedown', e => {
+    dragging = true;
+    dragStartX = e.clientX + lbWrap.scrollLeft;
+    dragStartY = e.clientY + lbWrap.scrollTop;
+    lbImg.style.cursor = 'grabbing';
+    e.preventDefault();
+  });
+  document.addEventListener('mouseup', () => {
+    dragging = false;
+    lbImg.style.cursor = 'grab';
+  });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    lbWrap.scrollLeft = dragStartX - e.clientX;
+    lbWrap.scrollTop  = dragStartY - e.clientY;
+  });
+
+  // ── Submenus ──
+  const submenus = {
+    experience: [
+      { label: 'Fortive',  section: 'fortive'  },
+      { label: 'Philips',  section: 'philips'  },
+      { label: 'Motorola', section: 'motorola' },
+      { label: 'Thomson',  section: 'thomson'  },
+    ],
+    projects: [
+      { label: 'Real time Trading System', section: 'trading' },
+      { label: 'Performance Monitor',   section: 'monitor' },
+    ],
+  };
+
+  let current = '';
+  let currentGroup = '';
+
+  // ── Load Section ──
+  async function loadSection(name) {
+    if (name === current) return;
+    content.classList.add('loading');
+    try {
+      const res  = await fetch(`sections/${name}.html`);
+      const html = await res.text();
+      setTimeout(() => {
+        content.innerHTML = html;
+        content.classList.remove('loading');
+        window.scrollTo(0, 0);
+        current = name;
+
+        // attach lightbox to all arch diagrams
+        content.querySelectorAll('.arch-diagram img, .arch-compare-item img').forEach(img => {
+          img.style.cursor = 'zoom-in';
+          img.addEventListener('click', () => openLightbox(img.src));
+        });
+      }, 150);
+    } catch (e) {
+      content.innerHTML = '<p style="color:var(--text-muted);padding:2rem;">Section not found.</p>';
+      content.classList.remove('loading');
+    }
+  }
+
+  function showSubnav(group, activeSection) {
+    const items = submenus[group];
+    subLinks.innerHTML = items.map(item =>
+      `<li><a href="#" data-section="${item.section}" class="${item.section === activeSection ? 'active' : ''}">${item.label}</a></li>`
+    ).join('');
+    subnav.style.display = 'flex';
+    mainEl.classList.add('has-subnav');
+    currentGroup = group;
+
+    subLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        subLinks.querySelectorAll('a').forEach(x => x.classList.remove('active'));
+        a.classList.add('active');
+        loadSection(a.dataset.section);
+      });
+    });
+  }
+
+  function hideSubnav() {
+    subnav.style.display = 'none';
+    mainEl.classList.remove('has-subnav');
+    currentGroup = '';
+  }
+
+  topLinks.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      topLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+      const group   = link.dataset.group;
+      const section = link.dataset.section;
+      if (group) {
+        showSubnav(group, section);
+        loadSection(section);
+      } else {
+        hideSubnav();
+        loadSection(section);
+      }
+    });
+  });
+
+  loadSection('hero');
+</script>
+</body>
+</html>

@@ -1,0 +1,351 @@
+<div class="section-label">Personal Project</div>
+<div class="project-header">
+  <h2>Automated Crypto Trading System</h2>
+  <div class="project-links">
+    <a href="https://github.com/Celia2024-bit/TradeSystem.git" target="_blank" class="project-link">GitHub →</a>
+  </div>
+</div>
+<div class="project-stack">C++ / Python · Binance API · Docker · GitHub Actions</div>
+
+<div class="project-story">
+
+  <p>Built from scratch to push myself into real high-performance system design. Python pulls live market data from Binance, C++ makes the trading decisions. <strong>They're isolated over a socket — if Python crashes, the C++ engine keeps running.</strong> Inside C++, three dedicated threads communicate through thread-safe queues to keep everything predictable and fast.</p>
+
+  <p>But the part I'm most proud of is the engineering discipline <em>around</em> the system — the tooling, the automation, the CI/CD gate. The goal was simple: <strong>build a system where problems get caught automatically, before they ever reach production.</strong></p>
+
+  <!-- Architecture Diagram -->
+  <div class="arch-diagram" style="margin: 2rem 0;">
+    <div class="arch-label">System Architecture</div>
+    <div class="tda-wrap">
+
+      <!-- ① Binance + Python -->
+      <div class="tda-col">
+        <div class="tda-node tda-binance">
+          <div class="tda-node-tag">External</div>
+          <div class="tda-node-title">Binance API</div>
+          <div class="tda-node-sub">BTCUSDT live price</div>
+        </div>
+        <div class="tda-vline"></div>
+        <div class="tda-node tda-python">
+          <div class="tda-node-tag">Python Process</div>
+          <div class="tda-node-title">MarketFetch.py</div>
+          <div class="tda-node-sub">REST poll · JSON encode<br/>CSV log · retry loop</div>
+        </div>
+      </div>
+
+      <!-- → Socket arrow -->
+      <div class="tda-hline-wrap">
+        <div class="tda-hline"></div>
+        <div class="tda-hline-label">TCP Socket<br/>localhost:9999</div>
+      </div>
+
+      <!-- ② C++ engine (Main + Thread 2 + Thread 3) -->
+      <div class="tda-col tda-col-cpp">
+
+        <!-- Main thread bar -->
+        <div class="tda-main-bar">
+          <span class="tda-main-bar-label">Main Thread · C++ Thread 1</span>
+          <span class="tda-main-bar-sub">SystemManager · startUp() → run() → shutDown()</span>
+        </div>
+
+        <!-- Thread 2 + Thread 3 side by side -->
+        <div class="tda-threads-row">
+
+          <div class="tda-thread-col">
+            <div class="tda-node tda-strategy">
+              <div class="tda-node-tag">C++ Thread 2</div>
+              <div class="tda-node-title">StrategyEngine</div>
+              <div class="tda-node-sub">SocketServer accept<br/>parse JSON · price history<br/>StrategyWrapper::runStrategy()</div>
+            </div>
+            <div class="tda-vline"></div>
+            <div class="tda-node tda-wrapper">
+              <div class="tda-node-tag">code-generated</div>
+              <div class="tda-node-title">StrategyWrapper</div>
+              <div class="tda-node-sub">SMA · BB · RSI<br/>IStrategy interface</div>
+            </div>
+          </div>
+
+          <!-- → SafeQueue arrow -->
+          <div class="tda-queue-wrap">
+            <div class="tda-queue-line"></div>
+            <div class="tda-queue-label">SafeQueue<br/>&lt;ActionSignal&gt;<br/>mutex + cv</div>
+          </div>
+
+          <div class="tda-thread-col">
+            <div class="tda-node tda-executor">
+              <div class="tda-node-tag">C++ Thread 3</div>
+              <div class="tda-node-title">TradeExecutor</div>
+              <div class="tda-node-sub">wait_for signal<br/>ExecuteBuyOrder()<br/>ExecuteSellOrder()</div>
+            </div>
+            <div class="tda-vline"></div>
+            <div class="tda-node tda-portfolio">
+              <div class="tda-node-tag">Output</div>
+              <div class="tda-node-title">Portfolio Mgmt</div>
+              <div class="tda-node-sub">P&amp;L · trade log<br/>CI/CD report</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Build pipeline row -->
+    <div class="build-pipeline">
+      <div class="build-label">Build Pipeline (RunTradeSystem.py)</div>
+      <div class="build-steps">
+        <div class="build-step">YAML Config</div>
+        <div class="build-step-arrow">→</div>
+        <div class="build-step">generate_code.py<br/><span>strategy selection</span></div>
+        <div class="build-step-arrow">→</div>
+        <div class="build-step">CppLogInjector.py<br/><span>auto entry/exit log</span></div>
+        <div class="build-step-arrow">→</div>
+        <div class="build-step">Add_check_all.py<br/><span>inject validation</span></div>
+        <div class="build-step-arrow">→</div>
+        <div class="build-step highlight-step">C++ Build</div>
+        <div class="build-step-arrow">→</div>
+        <div class="build-step highlight-step">CI/CD Gate</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tools -->
+  <div class="project-heading">Enhancement Tools & Automation</div>
+
+  <p>Manual logging in C++ is a nightmare — you end up cluttering source code everywhere. So I built Python injection tools that run during the build process. <strong>Zero changes to source code required.</strong></p>
+
+  <!-- CppLogInjector -->
+  <div class="tool-section">
+    <div class="tool-section-title">// CppLogInjector.py</div>
+    <p>Automatically injects entry/exit timestamps into every C++ function at build time. Complete flight-recorder view of timing — no manual logging, no source changes.</p>
+    <div class="code-compare">
+      <div class="code-block">
+        <div class="code-block-label">BEFORE · original source</div>
+        <pre><span class="kw">bool</span> <span class="fn">ExecuteBuyOrder</span>(
+  <span class="kw">double</span> price,
+  ActionSignal signal)
+{
+  <span class="cm">// business logic</span>
+  <span class="kw">return</span> placeOrder(price);
+}</pre>
+      </div>
+      <div class="code-block">
+        <div class="code-block-label">AFTER · auto-instrumented</div>
+        <pre><span class="kw">bool</span> <span class="fn">ExecuteBuyOrder</span>(
+  <span class="kw">double</span> price,
+  ActionSignal signal)
+{
+<span class="injected">  LOG(CustomerLogLevel::INFO)
+    &lt;&lt; <span class="str">" This is start of "</span>
+    &lt;&lt; __FILE__ &lt;&lt; <span class="str">"::"</span>
+    &lt;&lt; __FUNCTION__;</span>
+  <span class="cm">// Original logic</span>
+  <span class="kw">return</span> placeOrder(price);
+<span class="injected">  LOG(CustomerLogLevel::INFO)
+    &lt;&lt; <span class="str">" This is stop of "</span>
+    &lt;&lt; __FILE__ &lt;&lt; <span class="str">"::"</span>
+    &lt;&lt; __FUNCTION__;</span>
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add_check_all -->
+  <div class="tool-section">
+    <div class="tool-section-title">// Add_check_all.py</div>
+    <p>Reads a YAML config to know which functions to protect. Injects parameter validation + try-catch blocks. Uses C++17 <span class="metric">if constexpr</span> for compile-time type dispatch — zero runtime overhead.</p>
+    <p style="margin-bottom:0.75rem;">Inside <code class="metric">check_all()</code> — the injected validation function:</p>
+    <div class="tool-showcase" style="margin-bottom:1rem; grid-template-columns:1fr 1fr;">
+      <div class="tool-card">
+        <div class="tool-name">⚡ <code>if constexpr</code> Dispatch</div>
+        <div class="tool-desc">Single compile-time branch covers every parameter type — no runtime overhead, no specialisation boilerplate.<br/><br/>
+          <strong>Integrals</strong>: positivity check<br/>
+          <strong>Floats</strong>: <code>std::isfinite</code> blocks NaN/∞<br/>
+          <strong>Pointers</strong>: nullptr guard<br/>
+          <strong>Enums</strong> (<code>ActionType</code>): range gate<br/>
+          <strong>Structs</strong> (<code>ActionSignal</code>): recursive validation<br/>
+          <strong>STL Containers</strong>: non-empty guard
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">🔒 Fail-Fast Design</div>
+        <div class="tool-desc"><code>static_assert</code> triggers a compile-time error on any unsupported type — nothing slips through silently.<br/><br/>
+          Adding a new variable type = one branch in <code>ParameterCheck.h</code>. The Python script scales injection to hundreds of functions instantly — no manual changes to source.
+        </div>
+      </div>
+    </div>
+    <div class="code-compare">
+      <div class="code-block">
+        <div class="code-block-label">BEFORE · no validation</div>
+        <pre><span class="kw">bool</span> <span class="fn">ExecuteBuyOrder</span>(
+  <span class="kw">double</span> price,
+  <span class="kw">double</span> amount)
+{
+  <span class="cm">// no validation</span>
+  <span class="cm">// no error handling</span>
+}</pre>
+      </div>
+      <div class="code-block">
+        <div class="code-block-label">AFTER · auto-enhanced</div>
+        <pre><span class="kw">bool</span> <span class="fn">ExecuteBuyOrder</span>(
+  <span class="kw">double</span> price,
+  <span class="kw">double</span> amount)
+{
+<span class="injected">  <span class="kw">if</span>(!check_all(<span class="str">"ExecuteBuyOrder"</span>,
+      price, amount)) {
+    std::cerr &lt;&lt; <span class="str">"Invalid parameters in "</span>
+      <span class="str">"TradeExecutor::"</span>
+      <span class="str">"ExecuteBuyOrder! "</span>
+      <span class="str">"See parameter_check"</span>
+      <span class="str">".log for details"</span>
+      &lt;&lt; std::endl;
+    <span class="kw">return false</span>;
+  }</span>
+<span class="injected">  <span class="kw">try</span> {</span>
+  <span class="cm">  // Original logic</span>
+<span class="injected">  } <span class="kw">catch</span>(...) {
+    ErrorLogger::Log(...);
+    <span class="kw">return false</span>;
+  }</span>
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- generate_code + RunTradeSystem -->
+  <div class="tool-section">
+    <div class="tool-section-title">// generate_code.py + RunTradeSystem.py</div>
+    <p>Pick a strategy in a config file. The pipeline reads it, generates the C++ wrapper and updates the makefile — <strong>only that strategy compiles in.</strong> No matter how many strategies exist in the codebase, binary size stays constant. OTA stays clean.</p>
+
+    <div class="code-compare" style="margin-top:1.25rem;">
+      <div class="code-block">
+        <div class="code-block-label">strategy_config.yaml · you edit this</div>
+        <pre><span class="cm"># Switch strategy by uncommenting:</span>
+<span class="str">selected_class</span>: SimpleMovingAverageStrategy
+<span class="cm">#BollingerBandsStrategy</span>
+<span class="cm">#MomentumRSIStrategy</span>
+
+<span class="str">obj_name</span>: simpleMovingAverage
+<span class="cm">#bollingerBands</span>
+<span class="cm">#momentumRSI</span></pre>
+      </div>
+      <div class="code-block">
+        <div class="code-block-label">extra_sources.mk · auto-generated</div>
+        <pre><span class="cm"># Only this strategy compiles in:</span>
+<span class="kw">EXTRA_SRCS</span> =
+  src/TradeStrategy/
+  <span class="injected">SimpleMovingAverageStrategy.cpp</span>
+
+<span class="cm"># BollingerBandsStrategy.cpp → excluded</span>
+<span class="cm"># MomentumRSIStrategy.cpp   → excluded</span></pre>
+      </div>
+    </div>
+
+    <div class="code-compare" style="margin-top:1rem;">
+      <div class="code-block">
+        <div class="code-block-label">StrategyWrapper.cpp · auto-generated</div>
+        <pre><span class="cm">// Auto-generated — do not edit</span>
+<span class="kw">#include</span> <span class="str">"StrategyWrapper.h"</span>
+<span class="kw">#include</span> <span class="str">"SimpleMovingAverageStrategy.h"</span>
+
+<span class="kw">void</span> <span class="fn">StrategyWrapper::initialize</span>() {
+  <span class="kw">static</span> SimpleMovingAverageStrategy
+    <span class="injected">simpleMovingAverage</span>;
+  strategy_ = &amp;<span class="injected">simpleMovingAverage</span>;
+}</pre>
+      </div>
+      <div class="code-block">
+        <div class="code-block-label">RunTradeSystem.py · one-command launch</div>
+        <pre><span class="cm"># Detects yaml vs .cfg changes,</span>
+<span class="cm"># triggers only what's needed:</span>
+
+<span class="fn">generate_code</span>(config)   <span class="cm"># → wrapper</span>
+<span class="fn">inject_logs</span>(sources)    <span class="cm"># → entry/exit</span>
+<span class="fn">inject_checks</span>(sources)  <span class="cm"># → validation</span>
+<span class="fn">build</span>()                  <span class="cm"># → compile</span>
+<span class="fn">launch</span>(server, feed,
+       perf_monitor)     <span class="cm"># → run</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- CI/CD -->
+  <div class="project-heading">CI/CD Pipeline</div>
+
+  <p>Every commit triggers a <span class="metric">2-minute</span> live run against real Binance market data. Generates trading results + performance report. A regression gate checks memory, thread count, and handle trends — <strong>merge is automatically blocked if any metric shows a statistically significant upward slope.</strong></p>
+
+  <div class="arch-compare">
+    <div class="arch-compare-item">
+      <div class="arch-label">❌ Regression Gate — FAIL</div>
+      <img src="images/Performance_regress_failed.png" alt="CI/CD Regression FAIL" />
+    </div>
+    <div class="arch-compare-item">
+      <div class="arch-label">✅ Regression Gate — PASS</div>
+      <img src="images/Performance_regress_pass.png" alt="CI/CD Regression PASS" />
+    </div>
+  </div>
+
+  <div class="arch-label" style="margin-top:1.5rem;">Live Run Output — 2-minute CI validation against real Binance data</div>
+  <pre class="log-block" style="font-size:0.7rem; max-height:220px; overflow-y:auto;">2026-03-05 11:00:30 :: Strategy :: Client connected successfully.
+[RECV] "BTC" $73419.68 @ 11:00:30
+2026-03-05 11:00:49 :: Strategy :: Generated signal: BUY at $73407.37
+2026-03-05 11:00:49 :: Trade Executor :: BUY order executed: 0.01 BTC at $73407.4. Cash: $9265.93, BTC: 0.01
+2026-03-05 11:00:54 :: Strategy :: Generated signal: SELL at $73362.08
+2026-03-05 11:00:54 :: Trade Executor :: SELL order executed: 0.01 BTC at $73362.1. Cash: $9999.55, BTC: 0.00
+2026-03-05 11:01:00 :: Strategy :: Generated signal: BUY at $73365.81
+2026-03-05 11:01:00 :: Trade Executor :: BUY order executed: 0.01 BTC at $73365.8. Cash: $9265.89, BTC: 0.01
+2026-03-05 11:01:02 :: Strategy :: Generated signal: SELL at $73368.62
+2026-03-05 11:01:02 :: Trade Executor :: SELL order executed: 0.01 BTC at $73368.6. Cash: $9999.58, BTC: 0.00
+...
+2026-03-05 11:01:35 :: Main :: SystemManager: ShutDown complete.</pre>
+
+  <div class="bench-logs" style="margin-top:1.5rem;">
+    <div class="bench-log-col">
+      <div class="arch-label">Final Portfolio Summary</div>
+      <pre class="log-block">--- Portfolio Status ---
+Current Cash:    $10000.21
+BTC Amount:      0.00000
+Total Value:     $10000.21
+Initial Capital: $10000.00
+Profit/Loss:     +$0.21
+Total Trades:    10
+Buy Actions:     5
+Sell Actions:    5</pre>
+    </div>
+    <div class="bench-log-col">
+      <div class="arch-label">Performance Metrics</div>
+      <pre class="log-block">Memory:   5.23 → 5.40 MB  (stable)
+Handles:  74   → 76       (stable)
+Threads:  stable throughout
+Slope:    within threshold
+Result:   ✅ PASS</pre>
+    </div>
+  </div>
+
+  <div class="arch-compare" style="margin-top:1.5rem;">
+    <div class="arch-compare-item">
+      <div class="arch-label">Raw Performance Metrics</div>
+      <img src="images/report_raw_detail.png" alt="Raw performance metrics" />
+    </div>
+    <div class="arch-compare-item">
+      <div class="arch-label">Trend (Aggregated) Metrics</div>
+      <img src="images/report_trend_summary.png" alt="Trend performance metrics" />
+    </div>
+  </div>
+
+  <div class="arch-compare" style="margin-top:1rem;">
+    <div class="arch-compare-item">
+      <div class="arch-label">❌ Regression Gate — FAIL</div>
+      <img src="images/Performance_regress_failed.png" alt="CI/CD Regression FAIL" />
+    </div>
+    <div class="arch-compare-item">
+      <div class="arch-label">✅ Regression Gate — PASS</div>
+      <img src="images/Performance_regress_pass.png" alt="CI/CD Regression PASS" />
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    This project changed how I think about reliability — it's not just about writing good code, it's about <strong>building the systems that keep your code honest.</strong>
+  </div>
+
+</div>

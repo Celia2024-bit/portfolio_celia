@@ -1,0 +1,33 @@
+<div class="section-label">Personal Project</div>
+<div class="project-header">
+  <h2>Real-time Performance Monitor</h2>
+  <div class="project-links">
+    <a href="https://github.com/Celia2024-bit/tools.git" target="_blank" class="project-link">GitHub →</a>
+    <a href="https://tools-lime-eight.vercel.app" target="_blank" class="project-link">Live Demo →</a>
+  </div>
+</div>
+<div class="project-stack">Python · JavaScript · Docker · Vercel · GitHub Actions</div>
+<div class="project-story">
+  <p>This tool came from a frustration I kept running into. In my own C++ trading system and on the IEC 61850 platform at work, some of the worst bugs are completely silent — they don't crash anything right away. Memory creeps up, thread count grows, handles never get released. Hours later the system falls over, and you have no idea why. <strong>Happy path tests are too short to catch this. They run for a few seconds and move on.</strong></p>
+
+  <p>The key insight: <strong>watch the trend, not just the threshold.</strong> A slope is a problem. So I built a monitor that samples memory, thread count, handle count, and context switches every N seconds — aggregates them into trend points — then runs linear regression to detect upward slope. Integrated into CI/CD, if any metric shows a statistically significant upward trend, <strong>the pipeline automatically blocks the merge.</strong></p>
+
+  <p>I also wanted it to be zero-friction for the team — there's a live web dashboard where anyone can check real-time system health just by opening a link. No setup, no SSH, no tooling.</p>
+
+  <!-- Live demo video -->
+  <div class="monitor-demo">
+    <div class="arch-label">Dashboard — live run against the trading system</div>
+    <div class="monitor-demo-inner">
+      <video
+        src="images/live_monitor.mp4"
+        poster="images/live_monitor.png"
+        controls
+        muted
+        loop
+        playsinline
+      ></video>
+      <a href="https://tools-lime-eight.vercel.app" target="_blank" class="monitor-demo-link">
+        Open Live Dashboard →
+      </a>
+    </div>
+  </div>
