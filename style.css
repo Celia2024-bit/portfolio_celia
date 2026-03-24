@@ -1665,3 +1665,58 @@ h1 em { font-style: italic; color: var(--accent2); }
 @media (max-width: 600px) {
   .skills-edu-grid { grid-template-columns: 1fr; }
 }
+
+/* ── 移动端导航栏深度优化 ── */
+@media (max-width: 600px) {
+  .topnav {
+    /* 1. 取消居中，允许内容从左侧开始排列，防止 Home 被挤出左边界 */
+    justify-content: flex-start; 
+    padding: 0 1rem;
+    gap: 0.5rem;
+  }
+
+  .topnav-logo {
+    /* 2. 缩小 Logo 间距，给菜单留空间 */
+    margin-right: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .topnav-links {
+    /* 3. 核心：强制不换行，并允许横向滚动 */
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* iOS 滑动顺滑 */
+    padding: 0;
+    width: 100%;
+    /* 隐藏滚动条但保留功能 (针对 Chrome/Safari) */
+    scrollbar-width: none; 
+  }
+
+  .topnav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .topnav-links li a {
+    /* 4. 减小字号和间距，确保更多项能直接显示 */
+    font-size: 0.9rem !important; 
+    padding: 0.3rem 0.5rem;
+  }
+
+  /* 针对二级菜单 (Experience 下的项) 的移动端优化 */
+  .subnav-inner {
+    padding: 0 1rem;
+    overflow-x: auto;
+  }
+  
+  .subnav-links {
+    flex-wrap: nowrap;
+  }
+
+  /* 调整主体内容的边距，防止手机上太挤 */
+  #content {
+    width: 95vw;
+    margin: 1.5rem auto;
+    padding: 1.5rem 1rem;
+  }
+}
