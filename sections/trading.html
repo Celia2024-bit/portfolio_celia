@@ -90,7 +90,14 @@
 
     </div>
 
-    <!-- Build pipeline row -->
+  </div>
+
+  <!-- Tools -->
+  <div class="project-heading">Enhancement Tools & Automation</div>
+
+  <!-- RunTradeSystem -->
+  <div class="tool-section">
+    <div class="tool-section-title">// RunTradeSystem.py · one-command launch</div>
     <div class="build-pipeline">
       <div class="build-label">Build Pipeline (RunTradeSystem.py)</div>
       <div class="build-steps">
@@ -104,13 +111,25 @@
         <div class="build-step-arrow">→</div>
         <div class="build-step highlight-step">C++ Build</div>
         <div class="build-step-arrow">→</div>
+        <div class="build-step highlight-step">services launch</div>
+        <div class="build-step-arrow">→</div>
         <div class="build-step highlight-step">CI/CD Gate</div>
       </div>
     </div>
+    <div class="code-compare" style="margin-top:2.rem;">
+      <div class="code-block" style="flex:1;">
+        <div class="code-block-label">RunTradeSystem.py · one-command launch</div>
+        <pre><span class="cm"># Detects yaml vs .cfg changes,</span>
+<span class="cm"># triggers only what's needed:</span>
+<span class="fn">generate_code</span>(config)   <span class="cm"># → modify strategy wrapper</span>
+<span class="fn">CppLogInjector</span>(sources)    <span class="cm"># → inject entry/exit logs</span>
+<span class="fn">Add_check_all</span>(sources)  <span class="cm"># → inject validation + try-catch</span>
+<span class="fn">build</span>()                  <span class="cm"># → compile</span>
+<span class="fn">launch</span>(server, feed,
+       perf_monitor)     <span class="cm"># → run: data feed · trading engine · perf monitor</span></pre>
+      </div>
+    </div>
   </div>
-
-  <!-- Tools -->
-  <div class="project-heading">Enhancement Tools & Automation</div>
 
   <p>Manual logging in C++ is a nightmare — you end up cluttering source code everywhere. So I built Python injection tools that run during the build process. <strong>Zero changes to source code required.</strong></p>
 
@@ -206,9 +225,9 @@
     </div>
   </div>
 
-  <!-- generate_code + RunTradeSystem -->
+  <!-- generate_code -->
   <div class="tool-section">
-    <div class="tool-section-title">// generate_code.py + RunTradeSystem.py</div>
+    <div class="tool-section-title">// generate_code.py</div>
     <p>Pick a strategy in a config file. The pipeline reads it, generates the C++ wrapper and updates the makefile — <strong>only that strategy compiles in.</strong> No matter how many strategies exist in the codebase, binary size stays constant. OTA stays clean.</p>
 
     <div class="code-compare" style="margin-top:1.25rem;">
@@ -247,18 +266,6 @@
     <span class="injected">simpleMovingAverage</span>;
   strategy_ = &amp;<span class="injected">simpleMovingAverage</span>;
 }</pre>
-      </div>
-      <div class="code-block">
-        <div class="code-block-label">RunTradeSystem.py · one-command launch</div>
-        <pre><span class="cm"># Detects yaml vs .cfg changes,</span>
-<span class="cm"># triggers only what's needed:</span>
-
-<span class="fn">generate_code</span>(config)   <span class="cm"># → wrapper</span>
-<span class="fn">inject_logs</span>(sources)    <span class="cm"># → entry/exit</span>
-<span class="fn">inject_checks</span>(sources)  <span class="cm"># → validation</span>
-<span class="fn">build</span>()                  <span class="cm"># → compile</span>
-<span class="fn">launch</span>(server, feed,
-       perf_monitor)     <span class="cm"># → run</span></pre>
       </div>
     </div>
   </div>
