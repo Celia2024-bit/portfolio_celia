@@ -1715,3 +1715,57 @@ h1 em { font-style: italic; color: var(--accent2); }
     padding: 1.2rem;
   }
 }
+
+.monitor-explainer {
+  margin-top: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.monitor-explainer summary {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  background: var(--bg3);
+  list-style: none;
+  user-select: none;
+  transition: background 0.2s;
+}
+
+.monitor-explainer summary:hover { background: var(--bg2); }
+.monitor-explainer[open] summary { border-bottom: 1px solid var(--border); }
+
+.monitor-explainer-body {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  background: var(--bg);
+}
+
+.monitor-explainer-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.monitor-explainer-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--accent2);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.monitor-explainer-desc {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.75;
+}
+
+.monitor-explainer-desc strong { color: var(--text); font-weight: 500; }
