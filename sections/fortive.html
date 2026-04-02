@@ -135,18 +135,23 @@ auto callback = [&](const int& data) {
     </div>
   </div>
   
-  <!-- Project 2 -->
-  <div class="project-heading">Project 2 · Linux Migration · CentOS 8 → Ubuntu</div>
+  <!-- Project 2 · Merged -->
+  <div class="project-heading">Project 2 · CentOS 8 → Ubuntu · Field Deployment & Migration</div>
+  <p>The Linux servers at a customer site had been underperforming. The software team had rebuilt a clean image from scratch — but it only worked on one of the two servers; the second had different hardware. The site team wanted a second image. The software team said: just follow the docs. That back-and-forth went on for six months, until my manager sent me out to unblock it.</p>
 
-  <p>When CentOS 8 hit end-of-life, most teams treat it as a pure sysadmin task — swap the OS, test, done. I saw something different: <strong>an opportunity to fix a design that had been quietly accumulating debt for years.</strong></p>
+  <p>When I got there, the plan was to follow the CentOS 8 docs and get the second server set up. Two problems: CentOS 8 had gone end-of-life — package mirrors dead, forum threads leading nowhere. And the documentation itself was dense, inconsistent, full of unstated assumptions <strong>The field engineers weren't failing from lack of effort. They were reading a foreign language.</strong></p>
 
-  <p>The legacy stack was three layers deep — Windows services inside Wine, inside Docker, on CentOS. Every layer added overhead, added complexity, and added failure points. It was the kind of setup that works until it doesn't — and when it breaks, nobody knows where to look.</p>
-  <p>I removed Docker entirely. I stabilised Wine natively on Ubuntu — manually mapping all required Windows DLL dependencies and winetricks from scratch. Then I replaced Docker's process management with <strong>Supervisord</strong>, keeping the 24/7 self-healing behaviour but with direct kernel access and a much smaller resource footprint.</p>
+  <p>I came back and reported: this stack is a dead end. After three months of discussion, the decision came down — migrate to Ubuntu. I would lead it — including getting up to speed on power grid monitoring hardware I'd never touched before.</p>
+ 
+  <p>On the software side, the legacy stack was three layers deep:</p>
+
   <div class="highlight-box">
     <strong>Before:</strong> Windows Service → Wine → Docker → CentOS 8 &nbsp;(3 layers)<br/>
     <strong>After:</strong> Windows Service → Wine → Ubuntu &nbsp;(2 layers)<br/>
     Removed Docker entirely — fewer layers, fewer failure points, easier to debug under pressure.
   </div>
+
+  <p>I removed Docker entirely. I stabilised Wine natively on Ubuntu — <strong>manually mapping all required Windows DLL dependencies and winetricks from scratch</strong>, since no existing guide covered our exact setup. Then I replaced Docker's process management with <strong>Supervisord</strong>, preserving the 24/7 self-healing behaviour but with direct kernel access and a much smaller resource footprint.</p>
 
   <div class="arch-compare">
     <div class="arch-compare-item">
@@ -162,13 +167,8 @@ auto callback = [&](const int& data) {
   <div class="highlight-box">
     3 layers → 2 layers. Fewer layers means fewer things that can go wrong. <em>Simple is reliable.</em>
   </div>
-  <!-- Project 3 -->
-  <div class="project-heading">Project 3 · SmartPDM Factory Acceptance Testing</div>
- 
-  <div class="story">
-    <p>Outside my core software role, I was asked to execute the FAT for our large-scale industrial system — covering hardware signal testing, power fault simulation, and database validation on Linux.</p>
-    <p>I had no formal hardware background. I used AI to get up to speed on unfamiliar concepts as I went — and completed the full test cycle independently. </p>
-  </div>
+
+  <p>Once the migration was complete, I ran the full Factory Acceptance Test in the lab — hardware signal testing, power fault simulation, and database validation on Linux — working through the company's FAT documentation and verifying every requirement independently. What had been an open problem for the better part of a year was finally closed.</p>
  
 </div>
 <script>
