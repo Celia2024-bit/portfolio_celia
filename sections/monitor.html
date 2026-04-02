@@ -15,32 +15,65 @@
   <p>I also wanted it to be zero-friction for the team — there's a live web dashboard where anyone can check real-time system health just by opening a link. No setup, no SSH, no tooling.</p>
 
   <!-- Live demo video -->
-<div class="monitor-demo-inner">
-  <div class="monitor-video-block">
-    <div class="monitor-video-label">Windows</div>
-    <video
-      src="images/live_monitor_windows.mp4"
-      poster="images/live_monitor.png"
-      controls
-      muted
-      loop
-      playsinline
-    ></video>
+  <div class="monitor-demo-inner">
+    <div class="monitor-video-block">
+      <div class="monitor-video-label">Windows</div>
+      <video
+        src="images/live_monitor_windows.mp4"
+        poster="images/live_monitor.png"
+        controls
+        muted
+        loop
+        playsinline
+      ></video>
+    </div>
+
+    <div class="monitor-video-block">
+      <div class="monitor-video-label">Linux</div>
+      <video
+        src="images/live_monitor_linux.mp4"
+        poster="images/live_monitor.png"
+        controls
+        muted
+        loop
+        playsinline
+      ></video>
+    </div>
+
+    <a href="https://tools-lime-eight.vercel.app" target="_blank" class="monitor-demo-link">
+      Open Live Dashboard →
+    </a>
   </div>
 
-  <div class="monitor-video-block">
-    <div class="monitor-video-label">Linux</div>
-    <video
-      src="images/live_monitor_linux.mp4"
-      poster="images/live_monitor.png"
-      controls
-      muted
-      loop
-      playsinline
-    ></video>
-  </div>
+  <details class="monitor-explainer">
+    <summary>Why these metrics? ↓</summary>
+    <div class="monitor-explainer-body">
+      <div class="monitor-explainer-item">
+        <div class="monitor-explainer-label">Voluntary context switches</div>
+        <div class="monitor-explainer-desc">
+          A thread yields the CPU itself — waiting on a lock, a socket, or a condition variable.
+          A rising voluntary rate means <strong>more lock contention or blocking I/O</strong>:
+          threads are spending more time waiting for each other, even if CPU looks fine.
+        </div>
+      </div>
+      <div class="monitor-explainer-item">
+        <div class="monitor-explainer-label">Involuntary context switches</div>
+        <div class="monitor-explainer-desc">
+          The kernel forcibly preempts a thread because its time-slice expired.
+          A rising involuntary rate means the system is <strong>genuinely CPU-saturated</strong>
+          — more runnable work than cores to run it.
+        </div>
+      </div>
+      <div class="monitor-explainer-item">
+        <div class="monitor-explainer-label">Why not just watch CPU%?</div>
+        <div class="monitor-explainer-desc">
+          Instantaneous CPU% is too noisy. A 50 ms spike disappears between samples.
+          A thread holding a mutex for 200 ms barely registers as CPU usage at all.
+          <strong>The trend over time is what matters</strong> — a slow upward drift in
+          voluntary switches reveals a contention problem long before throughput visibly degrades.
+        </div>
+      </div>
+    </div>
+  </details>
 
-  <a href="https://tools-lime-eight.vercel.app" target="_blank" class="monitor-demo-link">
-    Open Live Dashboard →
-  </a>
 </div>
