@@ -1769,3 +1769,107 @@ h1 em { font-style: italic; color: var(--accent2); }
 }
 
 .monitor-explainer-desc strong { color: var(--text); font-weight: 500; }
+
+
+@media print {
+  /* ── 页面设置 ── */
+  @page {
+    margin: 12mm 15mm;
+    size: A4;
+    background: #0f1117;
+  }
+
+  /* ── 强制保留所有背景色（深色主题最关键！） ── */
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* ── 给整个页面强制深色背景（防止浏览器塞白边） ── */
+  html,
+  body {
+    background: #0f1117 !important;
+    color: #ffffff !important;
+  }
+
+  /* ── 隐藏导航栏 ── */
+  .topnav,
+  .subnav {
+    display: none !important;
+  }
+
+  /* ── 去掉导航栏撑开的 margin-top，否则顶部会有空白 ── */
+  .main,
+  .main.has-subnav,
+  .subnav ~ .main {
+    margin-top: 0 !important;
+  }
+
+  /* ── 内容区全宽铺满 ── */
+  #content {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 1.5rem !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: #181c27 !important;
+  }
+
+  /* ── 防止这些元素被分页截断 ── */
+  h1, h2, h3, h4,
+  .exp-item,
+  .proj-card,
+  .stat-card,
+  .skills-edu-card,
+  .skills-lang-card,
+  .skills-meta-card,
+  .cert-card,
+  .badge,
+  blockquote,
+  table,
+  img {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* ── 每个工作经历之间保持分隔，但不强制换页 ── */
+  .exp-item {
+    page-break-after: auto;
+  }
+
+  /* ── 隐藏视频、按钮、交互元素 ── */
+  video,
+  .monitor-demo,
+  .monitor-demo-link,
+  .monitor-explainer,
+  .btn,
+  .hero-links {
+    display: none !important;
+  }
+
+  /* ── 打印时链接不显示 URL ── */
+  a::after {
+    content: none !important;
+  }
+
+  /* ── 保证 badge / 卡片背景色正确渲染 ── */
+  .badge,
+  .stat-card,
+  .skills-edu-card,
+  .skills-lang-card,
+  .skills-meta-card,
+  .lang-row {
+    background: #1e2333 !important;
+    border-color: #2a2f42 !important;
+  }
+
+  .badge.hi,
+  .badge.highlight {
+    background: rgba(79, 156, 249, 0.12) !important;
+    border-color: rgba(79, 156, 249, 0.4) !important;
+    color: #7dd3fc !important;
+  }
+}
