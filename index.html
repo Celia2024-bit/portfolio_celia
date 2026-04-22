@@ -16,6 +16,7 @@
       <li><a href="#" data-section="about">About</a></li>
       <li><a href="#" data-group="experience" data-section="fortive">Experience</a></li>
       <li><a href="#" data-group="projects" data-section="trading">Personal Projects</a></li>
+      <li><a href="#" data-section="articles">Articles</a></li>
       <li><a href="#" data-section="skills">Expertise</a></li>
       <li><a href="#" data-section="contact">Contact</a></li>
     </ul>
@@ -117,6 +118,29 @@
       const html = await res.text();
       setTimeout(() => {
         content.innerHTML = html;
+        // for articles 
+        if (name === 'articles') {
+          const dataEl = document.getElementById('articles-data');
+          const container = document.getElementById('articles-grid-container');
+
+          if (dataEl && container) {
+            try {
+              const articles = JSON.parse(dataEl.textContent);
+              container.innerHTML = articles.map(art => `
+                <article class="article-card">
+                  <div class="article-date">${art.date}</div>
+                  <h3 class="article-title">${art.title}</h3>
+                  <p class="article-summary">${art.summary}</p>
+                  <a href="${art.link}" target="_blank" class="article-link">
+                    Read full article <span>→</span>
+                  </a>
+                </article>
+              `).join('');
+            } catch (err) {
+              console.error("Failed to parse articles JSON:", err);
+            }
+          }
+        }
         content.classList.remove('loading');
         window.scrollTo(0, 0);
         current = name;

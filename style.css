@@ -1873,3 +1873,75 @@ h1 em { font-style: italic; color: var(--accent2); }
     color: #7dd3fc !important;
   }
 }
+
+
+/* Articles Section Styles */
+.articles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.article-card {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.article-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--accent-color, #4facfe);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.article-date {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.article-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.6rem;
+  margin-bottom: 1.2rem;
+  line-height: 1.25;
+  color: #fff;
+}
+
+.article-summary {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
+  flex-grow: 1;
+  margin-bottom: 2rem;
+}
+
+.article-link {
+  /* 1. 强化字重 */
+  font-weight: 700; 
+  
+  /* 2. 使用更沉稳、饱和度低的颜色（类似低调的钢青色） */
+  color: #8da9c4; 
+  
+  text-decoration: none;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  /* 3. 平滑过渡效果 */
+  transition: all 0.2s ease-in-out;
+}
+
+.article-link:hover {
+  /* 4. 悬停时稍微点亮，并增加位移感 */
+  color: #fff;
+  gap: 0.8rem; /* 箭头往右移一点点，很有灵动感 */
+}
