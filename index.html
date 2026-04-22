@@ -182,6 +182,32 @@
     currentGroup = '';
   }
 
+  // 全局函数，用于控制滑动
+  function moveSlider(direction) {
+    const container = document.getElementById('articles-grid-container');
+    if (!container) return;
+    
+    // 每次滑动一个卡片的宽度 + 间距
+    const scrollAmount = container.clientWidth * 0.9; 
+    container.scrollBy({
+      left: direction * scrollAmount,
+      behavior: 'smooth'
+    });
+  }
+  function toggleArticleView() {
+    const wrapper = document.getElementById('slider-wrapper');
+    const btn = document.getElementById('toggle-view-btn');
+    
+    if (wrapper.classList.contains('full-view')) {
+      wrapper.classList.remove('full-view');
+      btn.textContent = 'View All';
+      // 回到最初位置防止错位
+      document.getElementById('articles-grid-container').scrollLeft = 0;
+    } else {
+      wrapper.classList.add('full-view');
+      btn.textContent = 'Back to Slider';
+    }
+  }
   topLinks.forEach(link => {
     link.addEventListener('click', e => {
       e.preventDefault();

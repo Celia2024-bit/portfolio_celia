@@ -1876,21 +1876,97 @@ h1 em { font-style: italic; color: var(--accent2); }
 
 
 /* Articles Section Styles */
+/* Articles Slider Container */
 .articles-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  gap: 1.5rem;
+  padding: 2rem 0; /* 给卡片阴影留出空间 */
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.articles-grid::-webkit-scrollbar {
+  display: none;
 }
 
 .article-card {
+  /* 手机端占据几乎全宽，桌面端固定宽度 */
+  flex: 0 0 85%; 
+  max-width: 450px;
+  
+  scroll-snap-align: center; /* 滚动停止时自动居中卡片 */
   background: rgba(255, 255, 255, 0.03);
   padding: 2rem;
-  border-radius: 12px;
+  border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.3s ease;
+}
+
+/* 桌面端稍微缩小卡片比例，让用户看到后面还有卡片 */
+@media (max-width: 600px) {
+  .slider-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 2rem;
+    background: rgba(30, 35, 51, 0.5); /* 手机上透明度更高，不挡文字 */
+  }
+  .slider-btn.prev { left: 0px; }
+  .slider-btn.next { right: 0px; }
+  
+  .article-card {
+    flex: 0 0 90%; /* 手机端卡片更大一点 */
+  }
+  .view-all-btn {
+    padding: 8px 18px;
+    font-size: 0.9rem;
+  }
+}
+
+/* 按钮样式：大尺寸、半透明背景、悬浮定位 */
+.slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  
+  /* 增大点击区域 */
+  width: 60px;
+  height: 60px;
+  
+  /* 箭头字体变大 */
+  font-size: 2.5rem;
+  font-family: 'Outfit', sans-serif;
+  
+  background: rgba(30, 35, 51, 0.7); /* 使用你的 --bg3 颜色带透明度 */
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px); /* 毛玻璃效果，很高级 */
+}
+
+.slider-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* 左右定位 */
+.slider-btn.prev {
+  left: -20px; /* 稍微超出边缘，方便点击 */
+}
+
+.slider-btn.next {
+  right: -20px;
 }
 
 .article-card:hover {
@@ -1944,4 +2020,52 @@ h1 em { font-style: italic; color: var(--accent2); }
   /* 4. 悬停时稍微点亮，并增加位移感 */
   color: #fff;
   gap: 0.8rem; /* 箭头往右移一点点，很有灵动感 */
+}
+
+.slider-wrapper.full-view .articles-grid {
+  display: grid; /* 变回网格 */
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  overflow-x: visible; /* 关闭横向滚动 */
+  scroll-snap-type: none;
+  padding: 1rem 0;
+}
+
+/* View All 模式下隐藏左右箭头 */
+.slider-wrapper.full-view .slider-btn {
+  display: none;
+}
+
+/* View All 模式下卡片宽度恢复 100% */
+.slider-wrapper.full-view .article-card {
+  flex: none;
+  max-width: 100%;
+}
+
+/* 按钮样式 */
+.view-all-btn {
+  background: transparent;
+  /* 稍微加粗边框，增加存在感 */
+  border: 2px solid var(--accent); 
+  color: var(--accent);
+  
+  /* 增大点击区域 */
+  padding: 10px 24px; 
+  border-radius: 8px;
+  
+  /* 字体调整：加粗并稍微放大 */
+  font-family: 'DM Mono', monospace;
+  font-size: 1rem; 
+  font-weight: 700;
+  
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap; /* 防止文字折行 */
+}
+
+.view-all-btn:hover {
+  background: var(--accent); /* 悬停时背景填满，反白效果 */
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px var(--accent-dim);
 }

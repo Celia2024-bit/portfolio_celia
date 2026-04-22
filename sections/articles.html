@@ -1,5 +1,19 @@
 <section class="section">
-  <div id="articles-grid-container" class="articles-grid">
+  <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+    <div>
+      <h1 class="section-title" style="margin-bottom: 0.5rem;">Technical Articles</h1>
+      <p class="section-subtitle">Swipe to explore or view all insights.</p>
+    </div>
+    <button id="toggle-view-btn" class="view-all-btn" onclick="toggleArticleView()">View All</button>
+  </div>
+  
+  <div id="slider-wrapper" class="slider-wrapper" style="position: relative;">
+    <button class="slider-btn prev" onclick="moveSlider(-1)">‹</button>
+    
+    <div id="articles-grid-container" class="articles-grid">
+      </div>
+    
+    <button class="slider-btn next" onclick="moveSlider(1)">›</button>
   </div>
 
   <script id="articles-data" type="application/json">
