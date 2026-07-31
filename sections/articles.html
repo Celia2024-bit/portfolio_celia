@@ -19,16 +19,46 @@
   <script id="articles-data" type="application/json">
 [
   {
+    "title": "Low-Latency Engineering 5 : A Phase-by-Phase Implementation Checklist",
+    "date": "Jul 31, 2026",
+    "summary": "Knowing why a technique works is one thing — knowing exactly which file to touch and when is another. This post reorganizes the entire low-latency toolkit by implementation phase: what's baked into the image, what's set at boot, and what your application does once at startup versus every cycle of its hot loop",
+    "link": "https://github.com/Celia2024-bit/kernel_learning/blob/main/docs/Low-Latency5_Phased-implementation-checklist.md"
+  }, 
+  {
+    "title": "Low-Latency Engineering 4: Putting It All Together — A Practical Playbook",
+    "date": "Jul 31, 2026",
+    "summary": "Four posts in, and this one closes the loop: from understanding why context switches, page faults, and cache contention cost what they cost, to an actual playbook — CPU isolation, kernel bypass, huge pages, and the right scheduling policy for the right task. If you've ever wondered how real-time systems actually get built, this is the checklist",
+    "link": "https://github.com/Celia2024-bit/kernel_learning/blob/main/docs/Low-Latency4_Practical-low-latency-playbook.md"
+  },
+  {
+    "title": "Low-Latency Engineering 3: What Actually Causes a Page Fault?",
+    "date": "Jul 31, 2026",
+    "summary": "This is post 3 of the series. Next up: pulling everything together into a practical playbook — how to actually reduce context switches (and even mode switches) on your hot path, plus the other techniques (CPU isolation, IRQ affinity, huge pages, false-sharing-safe data structures, and more) that round out a real low-latency setup.",
+    "link": "https://github.com/Celia2024-bit/kernel_learning/blob/main/docs/Low-Latency3_What-cause-a-page-fault.md"
+  },
+  {
+    "title": "Low-Latency Engineering 2: What Exactly Happens During a Context Switch?",
+    "date": "Jul 31, 2026",
+    "summary": "Ever wondered what actually happens, step by step, when the kernel takes the CPU away from one task and hands it to another? Part 2 of my low-latency series breaks down the context switch mechanism — from a real-world room analogy to the exact kernel steps behind system calls, page faults, and hardware interrupts.",
+    "link": "https://github.com/Celia2024-bit/kernel_learning/blob/main/docs/Low-Latency2_What_is_a_context_switches.md"
+  },
+  {
+    "title": "Low-Latency Engineering 1: Why I Stopped Memorizing Rules and Started Reading the Kernel",
+    "date": "Jul 31, 2026",
+    "summary": "Low-latency isn't just about applying rules like \"avoid context switches\" — it's about understanding what's actually happening inside the Linux kernel when they occur. First post in a series breaking down mode switches, context switches, and the kernel mechanics behind real-time system performance.",
+    "link": "https://github.com/Celia2024-bit/kernel_learning/blob/main/docs/Low-Latency1_Why_context_switches_matter.md"
+  },
+  {
+    "title": "Low-Latency Engineering 0： Bootloader and Kernel Handover",
+    "date": "Jul 4, 2026",
+    "summary": "Moving past rote checklist memorization to establish a clear high-level mental model, this note breaks down the inner mechanics of the embedded Linux boot lifecycle. By strictly separating control flow from data flow, it demystifies the exact handover sequence running from bare-metal ROM code up to the user-space init process.",
+    "link": "https://github.com/Celia2024-bit/kernel_learning/blob/main/docs/Bootloader_and_Kernel_Handover.md"
+  },
+  {
     "title": "Why Understanding the Boot Flow Makes debootstrap & Buildroot Easy",
     "date": "Jul 8, 2026",
     "summary": "Once you really get the boot flow, debootstrap and Buildroot stop feeling like magic.They’re just two ways of automating the same picture",
     "link": "https://www.linkedin.com/pulse/why-understanding-boot-flow-makes-debootstrap-buildroot-celia-qiang-gdkue/"
-  },
-  {
-    "title": "A Developer's Notes on the Linux Bootloader and Kernel Handover",
-    "date": "Jul 4, 2026",
-    "summary": "Moving past rote checklist memorization to establish a clear high-level mental model, this note breaks down the inner mechanics of the embedded Linux boot lifecycle. By strictly separating control flow from data flow, it demystifies the exact handover sequence running from bare-metal ROM code up to the user-space init process.",
-    "link": "https://www.linkedin.com/pulse/developers-notes-linux-bootloader-kernel-handover-celia-qiang-2b7ie/"
   },
   {
     "title": "The 'Blind Spot' in Industrial Systems — A Software Engineer's Reality Check",
@@ -101,6 +131,12 @@
     "date": "July 29, 2025",
     "summary": "Sharing a debugging experience that taught me about static initialization order issues in C++. Same code worked in VS but crashed with GCC - here's how I fixed it with lazy initialization patterns.",
     "link": "https://www.linkedin.com/pulse/debugging-tricky-c-static-initialization-order-bug-celia-qiang-0e2oc"
+  },
+  {
+    "title": "Unraveling a Data Order Mystery: A Real-World Lesson in Concurrency",
+    "date": "Jul 25, 2025",
+    "summary": "A technical post-mortem on a non-deterministic concurrency bug. I share the journey of diagnosing out-of-sequence data in a high-frequency system caused by fine-grained thread scheduling, and the architectural decision to implement a robust reordering strategy at the final processing stage to guarantee data integrity.",
+    "link": "https://www.linkedin.com/pulse/unraveling-data-order-mystery-real-world-lesson-celia-qiang-gecmc"
   },
   {
     "title": "Unraveling a Data Order Mystery: A Real-World Lesson in Concurrency",
