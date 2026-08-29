@@ -3,6 +3,7 @@
   <h2>Automated Crypto Trading System</h2>
   <div class="project-links">
     <a href="https://github.com/Celia2024-bit/TradeSystem.git" target="_blank" class="project-link">GitHub →</a>
+    <a href="https://celia2024-bit.github.io/tools/" target="_blank" class="project-link">Toolkit Docs ↗</a>
   </div>
 </div>
 <div class="project-stack">C++ / Python · Binance API · Docker · GitHub Actions</div>
@@ -105,13 +106,15 @@
         <div class="build-step-arrow">→</div>
         <div class="build-step">generate_code.py<br/><span>strategy selection</span></div>
         <div class="build-step-arrow">→</div>
-        <div class="build-step">CppLogInjector.py<br/><span>auto entry/exit log</span></div>
-        <div class="build-step-arrow">→</div>
-        <div class="build-step">Add_check_all.py<br/><span>inject validation</span></div>
+        <div class="build-step">trace_injector.py<br/><span>optional · trace + validate + guard</span></div>
         <div class="build-step-arrow">→</div>
         <div class="build-step highlight-step">C++ Build</div>
         <div class="build-step-arrow">→</div>
         <div class="build-step highlight-step">services launch</div>
+        <div class="build-step-arrow">→</div>
+        <div class="build-step highlight-step">2-min live run</div>
+        <div class="build-step-arrow">→</div>
+        <div class="build-step highlight-step">PNG report</div>
         <div class="build-step-arrow">→</div>
         <div class="build-step highlight-step">CI/CD Gate</div>
       </div>
@@ -121,106 +124,143 @@
         <div class="code-block-label">RunTradeSystem.py · one-command launch</div>
         <pre><span class="cm"># Detects yaml vs .cfg changes,</span>
 <span class="cm"># triggers only what's needed:</span>
-<span class="fn">generate_code</span>(config)   <span class="cm"># → modify strategy wrapper</span>
-<span class="fn">CppLogInjector</span>(sources)    <span class="cm"># → inject entry/exit logs</span>
-<span class="fn">Add_check_all</span>(sources)  <span class="cm"># → inject validation + try-catch</span>
-<span class="fn">build</span>()                  <span class="cm"># → compile</span>
-<span class="fn">launch</span>(server, feed,
-       perf_monitor)     <span class="cm"># → run: data feed · trading engine · perf monitor</span></pre>
+<span class="fn">generate_code</span>(config)      <span class="cm"># → strategy wrapper + extra_sources.mk</span>
+
+<span class="cm"># optional, one AST pass, reversible:</span>
+<span class="fn">trace_injector</span>(inject_cfg)  <span class="cm"># → trace + validate + guard</span>
+
+<span class="fn">build</span>()                     <span class="cm"># → make clean &amp;&amp; make all</span>
+<span class="fn">launch</span>(engine, feed,
+       monitor(pid=cpp_pid)) <span class="cm"># → 120s live run, sampled at 1s</span>
+<span class="fn">stop_file</span>()                 <span class="cm"># → graceful exit; terminate() as fallback</span>
+<span class="fn">plot_performance</span>()          <span class="cm"># → report_raw_detail.png
+                            #   report_trend_summary.png</span></pre>
       </div>
     </div>
   </div>
 
-  <p>Manual logging in C++ is a nightmare — you end up cluttering source code everywhere. So I built Python injection tools that run during the build process. <strong>Zero changes to source code required.</strong></p>
+  <p>Manual instrumentation in C++ is a losing game — you clutter every function with logging and validation, and then you can never get it back out again. So I built one tool that does it at build time from the <strong>Clang AST rather than regex</strong>, and that can reverse itself: run the remove config and <strong><code class="metric">src/</code> comes back byte-for-byte identical.</strong></p>
 
-  <!-- CppLogInjector -->
+  <!-- trace_injector -->
   <div class="tool-section">
-    <div class="tool-section-title">// CppLogInjector.py</div>
-    <p>Automatically injects entry/exit timestamps into every C++ function at build time. Complete flight-recorder view of timing — no manual logging, no source changes.</p>
-    <div class="code-compare">
+    <div class="tool-section-title">// trace_injector.py · three injections, one AST pass</div>
+    <p>A JSON config says which directories to instrument, which to leave alone, and which of <span class="metric">trace</span> · <span class="metric">validate</span> · <span class="metric">guard</span> to apply. Every line it writes carries an <code class="metric">// @autogen</code> marker, and <strong>that marker — not the C++ on the line — is how removal recognises its own work.</strong> A hand-written <code class="metric">ScopeTrace</code> is left alone; the earlier regex-matching version deleted those too.</p>
+
+    <div class="code-compare" style="margin-top:1.25rem;">
+      <div class="code-block">
+        <div class="code-block-label">config_all_cases_inject.json</div>
+        <pre>{
+  <span class="str">"inject"</span>: [{
+    <span class="str">"directory"</span>: <span class="str">"src"</span>,
+    <span class="str">"inject_type"</span>: [<span class="str">"trace"</span>,
+      <span class="str">"validate"</span>, <span class="str">"guard"</span>]
+  }],
+  <span class="str">"exclude"</span>: [
+    { <span class="str">"directory"</span>: <span class="str">"src/TradeStrategy"</span> },
+    { <span class="str">"directory"</span>: <span class="str">"src/Test"</span> }
+  ]
+}</pre>
+      </div>
+      <div class="code-block">
+        <div class="code-block-label">config_all_cases_remove.json · the undo</div>
+        <pre>{
+  <span class="str">"remove"</span>: [{
+    <span class="str">"directory"</span>: <span class="str">"src"</span>,
+    <span class="str">"inject_type"</span>: [<span class="str">"trace"</span>,
+      <span class="str">"validate"</span>, <span class="str">"guard"</span>]
+  }]
+}
+
+<span class="cm"># Removal is kind-blind: it strips</span>
+<span class="cm"># every @autogen marker it finds,</span>
+<span class="cm"># whatever inject_type wrote it.</span></pre>
+      </div>
+    </div>
+
+    <div class="code-compare" style="margin-top:1rem;">
       <div class="code-block">
         <div class="code-block-label">BEFORE · original source</div>
-        <pre><span class="kw">bool</span> <span class="fn">ExecuteBuyOrder</span>(
-  <span class="kw">double</span> price,
-  ActionSignal signal)
+        <pre><span class="kw">bool</span> <span class="fn">TradeExecutor::ExecuteBuyOrder</span>(
+  <span class="kw">double</span> price, <span class="kw">double</span> amount)
 {
   <span class="cm">// business logic</span>
-  <span class="kw">return</span> placeOrder(price);
+  <span class="kw">return</span> placeOrder(price, amount);
 }</pre>
       </div>
       <div class="code-block">
-        <div class="code-block-label">AFTER · auto-instrumented</div>
-        <pre><span class="kw">bool</span> <span class="fn">ExecuteBuyOrder</span>(
-  <span class="kw">double</span> price,
-  ActionSignal signal)
+        <div class="code-block-label">AFTER · trace + validate + guard</div>
+        <pre><span class="kw">bool</span> <span class="fn">TradeExecutor::ExecuteBuyOrder</span>(
+  <span class="kw">double</span> price, <span class="kw">double</span> amount)
 {
-<span class="injected">  LOG(CustomerLogLevel::INFO)
-    &lt;&lt; <span class="str">" This is start of "</span>&lt;&lt; __FILE__ &lt;&lt; <span class="str">"::"</span> &lt;&lt; __FUNCTION__;</span>
-  <span class="cm">// Original logic</span>
-  <span class="kw">return</span> placeOrder(price);
-<span class="injected">  LOG(CustomerLogLevel::INFO)
-    &lt;&lt; <span class="str">" This is stop of "</span>&lt;&lt; __FILE__ &lt;&lt; <span class="str">"::"</span>&lt;&lt; __FUNCTION__;</span>
+<span class="injected">  ScopeTrace trace(         <span class="cm">// @autogen: trace</span>
+    __FILE__, __LINE__,     <span class="cm">// @autogen: trace</span>
+    <span class="str">"TradeExecutor::ExecuteBuyOrder"</span>
+  );                        <span class="cm">// @autogen: trace</span>
+
+  <span class="kw">static const char</span>* __param_names[]
+    = { <span class="str">"price"</span>, <span class="str">"amount"</span> };
+  validate_params(<span class="str">"...::ExecuteBuyOrder"</span>,
+    __param_names, price, amount);
+                         <span class="cm">// @autogen: validate</span>
+
+  <span class="kw">try</span>
+  {                        <span class="cm">// @autogen: guard</span></span>
+  <span class="cm">  // Original body — untouched,</span>
+  <span class="cm">  // not even re-indented</span>
+<span class="injected">  }
+  <span class="kw">catch</span> (<span class="kw">const</span> std::exception&amp; error)
+  {
+    ErrorLogger::LogError(<span class="str">"TradeExecutor"</span>,
+      <span class="str">"ExecuteBuyOrder"</span>, <span class="str">"std::exception"</span>,
+      error.what());
+    <span class="kw">throw</span>;      <span class="cm">// @autogen: end of guard</span>
+  }</span>
 }</pre>
+      </div>
+    </div>
+
+    <div class="tool-showcase" style="margin-top:1.25rem; grid-template-columns:1fr 1fr;">
+      <div class="tool-card">
+        <div class="tool-name">🔁 Reversible by construction</div>
+        <div class="tool-desc">The guard is the hard case — it writes at <em>both</em> ends of the body, so its closing half carries a different marker (<code>end of guard</code>) and the remover can never mistake an opening for a closing.<br/><br/>
+          The original body is not re-indented, even though it now sits one level shallower than the <code>try</code> around it. That is deliberate: reindenting would turn every injection into a diff across the whole function, and byte-identical removal is the entire promise.<br/><br/>
+          <code>throw;</code> is not optional either — swallowing the exception would change what the program does, and in a function that returns a value it would run off the end of the body.
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">📐 Ordering is load-bearing</div>
+        <div class="tool-desc"><code>guard</code> is applied last, so its <code>try</code> opens directly above the original body. That puts <code>ScopeTrace</code> and the parameter check <strong>outside</strong> the try — which is what you want:<br/><br/>
+          the trace object is still alive while the <code>catch</code> runs, so its destructor logs the exit <em>after</em> the error is recorded. Reverse the order and the exit log vanishes from exactly the runs you care about.<br/><br/>
+          Adding a fourth injection kind is one entry in <code>INJECTION_KINDS</code>; inject and remove both read from it, so the two cannot drift apart.
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Add_check_all -->
+  <!-- ParameterCheck -->
   <div class="tool-section">
-    <div class="tool-section-title">// Add_check_all.py</div>
-    <p>Reads a YAML config to know which functions to protect. Injects parameter validation + try-catch blocks. Uses C++17 <span class="metric">if constexpr</span> for compile-time type dispatch — zero runtime overhead.</p>
-    <p style="margin-bottom:0.75rem;">Inside <code class="metric">check_all()</code> — the injected validation function:</p>
+    <div class="tool-section-title">// ParameterCheck.h · what the injected validate call lands in</div>
+    <p>The injector only writes the call. The type dispatch behind it is a C++17 <span class="metric">if constexpr</span> chain in the <code class="metric">util</code> library — one compile-time branch covering every parameter type, with no runtime overhead and no specialisation boilerplate.</p>
+    <p style="margin-bottom:0.75rem;">Inside <code class="metric">validate_params()</code> — the function the injected line calls:</p>
     <div class="tool-showcase" style="margin-bottom:1rem; grid-template-columns:1fr 1fr;">
       <div class="tool-card">
         <div class="tool-name">⚡ <code>if constexpr</code> Dispatch</div>
-        <div class="tool-desc">Single compile-time branch covers every parameter type — no runtime overhead, no specialisation boilerplate.<br/><br/>
-          <strong>Integrals</strong>: positivity check<br/>
-          <strong>Floats</strong>: <code>std::isfinite</code> <br/>
+        <div class="tool-desc">Resolved entirely at compile time — branches that do not apply are never emitted.<br/><br/>
+          <strong>Floats</strong>: <code>std::isfinite</code> — catches the NaN from a bad division<br/>
           <strong>Pointers</strong>: nullptr guard<br/>
-          <strong>Enums</strong> (<code>ActionType</code>): range gate<br/>
-          <strong>Structs</strong> (<code>ActionSignal</code>): recursive validation<br/>
-          <strong>STL Containers</strong>: non-empty guard
+          <strong>Structs</strong>: calls the type's own <code>isValid()</code><br/>
+          <strong>Containers</strong>: non-empty guard via <code>empty()</code><br/>
+          <strong>Enums</strong>: <code>check_traits&lt;T&gt;</code> range gate — registered for <code>ActionType</code>, <code>SymbolType</code> and <code>CustomerLogLevel</code><br/>
+          <strong>Integrals</strong>: accepted as-is. A price of <code>0</code> and a count of <code>-1</code> are each legitimate somewhere, so the check makes no assumption it cannot justify.
         </div>
       </div>
       <div class="tool-card">
         <div class="tool-name">🔒 Fail-Fast Design</div>
-        <div class="tool-desc"><code>static_assert</code> triggers a compile-time error on any unsupported type — nothing slips through silently.<br/><br/>
-          Adding a new variable type = one branch in <code>ParameterCheck.h</code>. The Python script scales injection to hundreds of functions instantly — no manual changes to source.
+        <div class="tool-desc">Pass a type nobody prepared and it is a <strong>compile error</strong>, not a silent pass:<br/><br/>
+          <code>static_assert</code> — <em>"Type is NOT prepared for validation! Provide one of: isValid() const, empty(), or check_traits&lt;T&gt; specialization."</em><br/><br/>
+          Three ways to make a type validatable, all opt-in, none of them touching the check itself. <code>ActionSignal</code> takes the first route, and its <code>isValid()</code> in turn calls <code>check_traits&lt;ActionType&gt;</code> — validation composes.<br/><br/>
+          A second <code>static_assert</code> caps it at 10 parameters; a function that needs more has a design problem the injector should not paper over.
         </div>
-      </div>
-    </div>
-    <div class="code-compare">
-      <div class="code-block">
-        <div class="code-block-label">BEFORE · no validation</div>
-        <pre><span class="kw">bool</span> <span class="fn">ExecuteBuyOrder</span>(
-  <span class="kw">double</span> price,
-  <span class="kw">double</span> amount)
-{
-  <span class="cm">// no validation</span>
-  <span class="cm">// no error handling</span>
-}</pre>
-      </div>
-      <div class="code-block">
-        <div class="code-block-label">AFTER · auto-enhanced</div>
-        <pre><span class="kw">bool</span> <span class="fn">ExecuteBuyOrder</span>(
-  <span class="kw">double</span> price,
-  <span class="kw">double</span> amount)
-{
-<span class="injected">  <span class="kw">if</span>(!check_all(<span class="str">"ExecuteBuyOrder"</span>,
-      price, amount)) {
-    std::cerr &lt;&lt; <span class="str">"Invalid parameters in "</span>
-      <span class="str">"TradeExecutor:: ExecuteBuyOrder!"</span>
-      <span class="str">"See parameter_check.log for details"</span>
-      &lt;&lt; std::endl;
-    <span class="kw">return false</span>;
-  }</span>
-<span class="injected">  <span class="kw">try</span> {</span>
-  <span class="cm">  // Original logic</span>
-<span class="injected">  } <span class="kw">catch</span>(...) {
-    ErrorLogger::Log(...);
-    <span class="kw">return false</span>;
-  }</span>
-}</pre>
       </div>
     </div>
   </div>
@@ -273,7 +313,11 @@
   <!-- CI/CD -->
   <div class="project-heading">CI/CD Pipeline</div>
 
-  <p>Every commit triggers a <span class="metric">2-minute</span> live run against real Binance market data. Generates trading results + performance report. A regression gate checks memory, thread count,  ,handle and context switches trends — <strong>merge is automatically blocked if any metric shows a statistically significant upward slope.</strong></p>
+  <p>A GitHub Actions pipeline that does not just compile the project. One job builds the toolchain image and pushes it to <code class="metric">ghcr.io</code>; the next runs <em>inside</em> that image, so what tests the code is byte-for-byte what was just published. Then every commit triggers a <span class="metric">2-minute</span> live run against real Binance market data — the C++ engine trading while a monitor attached to its PID samples memory, threads, handles and context switches once a second, aggregating them into ~63 trend points and two PNG charts.</p>
+
+  <p>Then the gate. Four metrics, checked <strong>two ways each</strong>: against an absolute ceiling, and for upward slope by least-squares fit across the whole run. Any one of the eight failing exits non-zero — <strong>which fails the job, which blocks the merge.</strong> The ceilings are the observed baseline doubled, not guesses. Voluntary context switches are plotted but deliberately <em>not</em> slope-gated: a thread yielding while it waits on a socket is this system working correctly, and gating on it would fail every I/O-bound build.</p>
+
+  <p>A <span class="metric">2-minute</span> run is the point. <strong>A test that finishes in 40 ms cannot see a handle that is never released</strong> — it has no slope to look at. And artifacts upload on <code class="metric">if: always()</code>, so when the gate does block something, the chart explaining why is attached to the run that failed rather than waiting to be reproduced on someone's laptop.</p>
 
   <div class="arch-label" style="margin-top:1.5rem;">Live Run Output — 2-minute CI validation against real Binance data</div>
   <pre class="log-block" style="font-size:0.7rem; max-height:220px; overflow-y:auto;">2026-03-05 11:00:30 :: Strategy :: Client connected successfully.
@@ -303,12 +347,15 @@ Buy Actions:     5
 Sell Actions:    5</pre>
     </div>
     <div class="bench-log-col">
-      <div class="arch-label">Performance Metrics</div>
-      <pre class="log-block">Memory:   5.23 → 5.40 MB  (stable)
-Handles:  74   → 76       (stable)
-Threads:  stable throughout
-Slope:    within threshold
-Result:   ✅ PASS</pre>
+      <div class="arch-label">Regression Gate — 63 trend points</div>
+      <pre class="log-block">            peak   limit    slope
+Memory     5.4MB   10MB   -0.0001
+Handles       76    150   +0.0180
+Threads        6     12   -0.0518
+Ctx invol    0/s    500    0.0000
+
+Slope limit: 0.05 per trend-point
+Result:   ✅ PASS — 8/8 checks</pre>
     </div>
   </div>
 
