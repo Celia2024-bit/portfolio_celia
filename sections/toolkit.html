@@ -1,0 +1,28 @@
+<div class="section-label">Side Project</div>
+<div class="project-header">
+  <h2>C++ Developer Toolkit</h2>
+  <div class="project-links">
+    <a href="https://github.com/Celia2024-bit/tools.git" target="_blank" class="project-link">GitHub →</a>
+    <a href="https://tools-lime-eight.vercel.app" target="_blank" class="project-link">Live Dashboard →</a>
+    <a href="https://celia2024-bit.github.io/tools/" target="_blank" class="project-link">Open Fullscreen ↗</a>
+  </div>
+</div>
+<div class="project-stack">Python · libclang · C++17 · Docker · Vercel · GitHub Actions</div>
+<div class="project-story">
+  <p>This started as one tool, not four. Building my own C++ trading system, the bugs that cost me the most were the silent ones — memory creeping up, thread count growing, handles never released. Nothing crashes; hours later the system falls over and there is no stack trace to read. <strong>Happy-path tests are far too short to catch that.</strong> The fix was to stop watching thresholds and start watching slopes, which became the performance monitor.</p>
+
+  <p>Then the same shape of problem kept reappearing somewhere else — work that was mechanical, repetitive, and easy to get subtly wrong by hand. Each time I wrote the tool instead of doing it again. They ended up sharing one rule: <strong>anything that edits your source code has to be able to put it back exactly as it was.</strong> A tool you cannot undo is a tool you will not run on code you care about.</p>
+
+  <p><strong>Trace Injector</strong> walks the Clang AST to add tracing, parameter validation and exception guards, then strips them again byte-for-byte. <strong>State Machine Toolkit</strong> generates the C++17 state machine and its Mermaid diagram from one definition, so the diagram cannot drift from the code. <strong>Interface Sync</strong> scans the header tree to propagate a changed signature through every implementation. And the <strong>Performance Monitor</strong> is the one that watches the result — sampling memory, threads, handles and context switches, fitting a slope over the trend, and blocking the merge in CI when the slope points up.</p>
+
+  <p>The full write-up for each tool — with the real before/after diffs, the live dashboard recordings, and the CI gate output — lives on the docs site below.</p>
+
+  <div class="iframe-container" style="margin-top: 1.5rem; width: 100%; height: 78vh; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+    <iframe
+      src="https://celia2024-bit.github.io/tools/"
+      style="width: 100%; height: 100%; border: none;"
+      title="TradeSystem Tools — C++ developer toolkit">
+    </iframe>
+  </div>
+
+</div>
