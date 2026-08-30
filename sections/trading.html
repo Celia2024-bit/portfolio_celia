@@ -106,7 +106,7 @@
         <div class="build-step-arrow">→</div>
         <div class="build-step">generate_code.py<br/><span>strategy selection</span></div>
         <div class="build-step-arrow">→</div>
-        <div class="build-step">trace_injector.py<br/><span>optional · trace + validate + guard</span></div>
+        <div class="build-step">aspect_injector.py<br/><span>optional · trace + validate + guard</span></div>
         <div class="build-step-arrow">→</div>
         <div class="build-step highlight-step">C++ Build</div>
         <div class="build-step-arrow">→</div>
@@ -127,7 +127,7 @@
 <span class="fn">generate_code</span>(config)      <span class="cm"># → strategy wrapper + extra_sources.mk</span>
 
 <span class="cm"># optional, one AST pass, reversible:</span>
-<span class="fn">trace_injector</span>(inject_cfg)  <span class="cm"># → trace + validate + guard</span>
+<span class="fn">aspect_injector</span>(inject_cfg)  <span class="cm"># → trace + validate + guard</span>
 
 <span class="fn">build</span>()                     <span class="cm"># → make clean &amp;&amp; make all</span>
 <span class="fn">launch</span>(engine, feed,
@@ -141,9 +141,9 @@
 
   <p>Manual instrumentation in C++ is a losing game — you clutter every function with logging and validation, and then you can never get it back out again. So I built one tool that does it at build time from the <strong>Clang AST rather than regex</strong>, and that can reverse itself: run the remove config and <strong><code class="metric">src/</code> comes back byte-for-byte identical.</strong></p>
 
-  <!-- trace_injector -->
+  <!-- aspect_injector -->
   <div class="tool-section">
-    <div class="tool-section-title">// trace_injector.py · three injections, one AST pass</div>
+    <div class="tool-section-title">// aspect_injector.py · three injections, one AST pass</div>
     <p>A JSON config says which directories to instrument, which to leave alone, and which of <span class="metric">trace</span> · <span class="metric">validate</span> · <span class="metric">guard</span> to apply. Every line it writes carries an <code class="metric">// @autogen</code> marker, and <strong>that marker — not the C++ on the line — is how removal recognises its own work.</strong> A hand-written <code class="metric">ScopeTrace</code> is left alone; the earlier regex-matching version deleted those too.</p>
 
     <div class="code-compare" style="margin-top:1.25rem;">
